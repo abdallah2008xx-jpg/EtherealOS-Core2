@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Hardware Manager
+Comment=Manage EtherealOS Hardware Drivers
+Exec=/home/abdallah/.local/bin/Ethereal-Hardware-Manager.sh
+Icon=preferences-system-devices
+Terminal=false
+Categories=System;Settings;HardwareSettings;

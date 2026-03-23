@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Ethereal Optimizer
+Comment=Clean cache and memory buffers
+Exec=/home/abdallah/.local/bin/Ethereal-Optimizer.sh
+Icon=utilities-system-monitor
+Terminal=false
+Categories=System;

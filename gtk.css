@@ -1,0 +1,65 @@
+/* ==========================================================
+ * Ethereal Architect OS - Global GTK3 Glass Theme
+ * Makes System Settings, Nemo, and other apps beautifully translucent.
+ * ========================================================== */
+
+/* Main application backgrounds */
+window, 
+window.background, 
+.view, 
+.rubberband,
+headerbar, 
+.titlebar, 
+.cs-header {
+    background-color: rgba(12, 14, 23, 0.65);
+    background-image: none;
+    color: #f0f0fd;
+}
+
+/* Sidebar in System Settings and File Manager */
+.sidebar,
+.sidebar view,
+.sidebar list {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Cinnamon Settings specific styles */
+#cs-main-window {
+    background-color: rgba(12, 14, 23, 0.65);
+}
+
+#cs-main-window scrolledwindow {
+    background-color: transparent;
+}
+
+/* Titlebars (like Mac) */
+headerbar, .titlebar {
+    border-bottom: 1px solid rgba(126, 215, 255, 0.3);
+    box-shadow: none;
+    padding: 8px;
+}
+
+/* Buttons and Inputs */
+button, entry, combobox {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #ffffff;
+}
+
+button:hover {
+    background-color: rgba(126, 215, 255, 0.3);
+    border-color: rgba(126, 215, 255, 0.6);
+}
+
+/* Lists and icons */
+row:hover {
+    background-color: rgba(126, 215, 255, 0.15);
+}
+
+/* Remove solid white/gray hardcoded backgrounds */
+textview text, iconview, listview {
+    background-color: rgba(12, 14, 23, 0.5);
+    color: #ffffff;
+}

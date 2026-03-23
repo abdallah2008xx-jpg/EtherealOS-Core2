@@ -1,0 +1,67 @@
+* {
+    background-color: transparent;
+    text-color: #f0f0fd;
+    font: "Plus Jakarta Sans 12";
+}
+
+window {
+    background-color: rgba(12, 14, 23, 0.40); /* Ethereal surface very translucent */
+    border: 1px;
+    border-color: rgba(255, 255, 255, 0.20);
+    border-radius: 20px;
+    width: 600px;
+    padding: 20px;
+}
+
+mainbox {
+    children: [ inputbar, listview ];
+    spacing: 15px;
+}
+
+inputbar {
+    background-color: rgba(255, 255, 255, 0.10);
+    border: 1px;
+    border-color: rgba(255, 255, 255, 0.20);
+    border-radius: 12px;
+    padding: 12px;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    font: "Inter Bold 12";
+    text-color: #7ed7ff;
+    padding: 0 10px 0 0;
+}
+
+entry {
+    placeholder: "Search EtherealOS or the web...";
+    placeholder-color: rgba(255, 255, 255, 0.4);
+    text-color: #ffffff;
+}
+
+listview {
+    columns: 2;
+    lines: 6;
+    spacing: 8px;
+    scrollbar: false;
+}
+
+element {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+element selected {
+    background-color: rgba(126, 215, 255, 0.20);
+    border: 1px;
+    border-color: rgba(126, 215, 255, 0.40);
+}
+
+element-text {
+    vertical-align: 0.5;
+}
+
+element-icon {
+    size: 24px;
+}

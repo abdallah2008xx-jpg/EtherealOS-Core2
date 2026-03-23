@@ -1,0 +1,1417 @@
+/* ============================================================
+   EtherealOS — "The Ethereal Architect" Design System
+   Cinnamon Desktop Theme
+
+   Creative North Star: Frosted glass panes, cosmic neutrals,
+   electric cyan accents, editorial typography.
+
+   Color Tokens:
+     background:                #0c0e17
+     surface:                   #0c0e17
+     surface-container-lowest:  #000000
+     surface-container-low:     #11131d
+     surface-container:         #171924
+     surface-container-high:    #1c1f2b
+     surface-container-highest: #222532
+     surface-bright:            #282b3a
+     on-surface:                #f0f0fd
+     on-surface-variant:        #aaaab7
+     primary:                   #7ed7ff
+     primary-container:         #4eabd1
+     on-primary:                #004a61
+     secondary:                 #a3b2fa
+     secondary-container:       #334282
+     tertiary:                  #e6a7ff
+     tertiary-container:        #dc95fb
+     error:                     #ff716c
+     outline:                   #737580
+     outline-variant:           #464752
+
+   The "No-Line" Rule:
+     No 1px solid borders for sectioning.
+     Separation by tonal layering only.
+
+   The "Ghost Border":
+     1px outline-variant at 20% opacity.
+     Catches light without boxing in content.
+   ============================================================ */
+
+
+/* ── Stage & Global Reset ── */
+stage {
+  color: #f0f0fd;
+  font-family: "Inter", "Noto Sans", sans-serif;
+  font-size: 10pt;
+}
+
+
+/* ============================================================
+   TOP PANEL — Floating frosted glass pill
+   ============================================================ */
+#panel {
+  background-color: rgba(12, 14, 23, 0.10);
+  font-size: 10pt;
+  font-weight: 500;
+  color: #f0f0fd;
+  height: 34px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.panel-top {
+  background-color: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  margin: 12px 24px 0 24px;
+}
+
+.panel-bottom {
+  background-color: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 48px;
+  box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.5);
+  margin: 0 25% 16px 25%;
+}
+
+.panel-left {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 24px;
+  box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+  margin: 12px 0 12px 12px;
+}
+
+/* Right panel */
+.panel-right {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  width: 52px;
+  margin: 8px 8px 8px 0;
+}
+
+
+/* ============================================================
+   PANEL ITEMS — Buttons, labels, icons
+   ============================================================ */
+.panel-button {
+  -natural-hpadding: 8px;
+  -minimum-hpadding: 4px;
+  color: rgba(255, 255, 255, 0.70);
+  padding: 0 6px;
+  transition-duration: 200ms;
+}
+
+.panel-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+.panel-button:active,
+.panel-button:checked,
+.panel-button:focus {
+  background-color: rgba(126, 215, 255, 0.15);
+  color: #7ed7ff;
+  border-radius: 8px;
+}
+
+.panel-status-button {
+  -natural-hpadding: 4px;
+  color: rgba(255, 255, 255, 0.70);
+}
+
+.panel-status-button:hover {
+  color: #ffffff;
+}
+
+/* Panel label */
+.panel-button .panel-label {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+/* System tray */
+.systray {
+  spacing: 4px;
+}
+
+.system-tray-icon {
+  icon-size: 1.14em;
+  padding: 0 2px;
+}
+
+/* Panel icon */
+.panel-button StIcon {
+  icon-size: 20px;
+  color: rgba(255, 255, 255, 0.70);
+}
+
+.panel-button:hover StIcon {
+  color: #7ed7ff;
+}
+
+
+/* ============================================================
+   APPLET SPECIFIC — Menu, Calendar, etc.
+   ============================================================ */
+
+/* ── Menu Applet (App Launcher) ── */
+.menu {
+  background-color: rgba(12, 14, 23, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  padding: 12px;
+  min-width: 400px;
+  color: #f0f0fd;
+}
+
+.menu-favorites-box {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 8px;
+  margin: 4px 0;
+}
+
+.menu-places-box {
+  background-color: transparent;
+  padding: 8px;
+}
+
+.menu-categories-box {
+  background-color: transparent;
+  padding: 0 8px;
+}
+
+.menu-applications-inner-box,
+.menu-applications-outer-box {
+  padding: 4px;
+}
+
+.menu-application-button {
+  padding: 6px 10px;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.70);
+  transition-duration: 150ms;
+}
+
+.menu-application-button:hover,
+.menu-application-button:highlighted {
+  background-color: rgba(126, 215, 255, 0.12);
+  color: #7ed7ff;
+}
+
+.menu-application-button:active {
+  background-color: rgba(126, 215, 255, 0.20);
+  color: #ffffff;
+}
+
+.menu-application-button-label {
+  font-size: 10pt;
+  color: inherit;
+}
+
+.menu-application-button-icon {
+  icon-size: 24px;
+}
+
+.menu-category-button {
+  padding: 6px 10px;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.menu-category-button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #f0f0fd;
+}
+
+.menu-category-button-selected {
+  background-color: rgba(126, 215, 255, 0.12);
+  color: #7ed7ff;
+}
+
+.menu-search-entry {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 32px;
+  color: #f0f0fd;
+  padding: 6px 14px;
+  caret-color: #7ed7ff;
+  selection-background-color: rgba(126, 215, 255, 0.25);
+}
+
+.menu-search-entry:focus {
+  border-color: rgba(126, 215, 255, 0.50);
+  box-shadow: 0 0 10px rgba(126, 215, 255, 0.15);
+}
+
+.menu-search-entry-icon {
+  icon-size: 16px;
+  color: rgba(255, 255, 255, 0.40);
+}
+
+/* User icon in menu */
+.menu-user-icon {
+  icon-size: 48px;
+  border-radius: 24px;
+}
+
+.menu-info-box {
+  padding: 8px;
+}
+
+.menu-place-cat-button {
+  padding: 6px 10px;
+  border-radius: 12px;
+}
+
+.menu-place-cat-button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.popup-separator-menu-item {
+  background-color: rgba(255, 255, 255, 0.08);
+  height: 1px;
+  margin: 6px 14px;
+}
+
+/* Favorites in menu */
+.menu-favorites-button {
+  padding: 6px 4px;
+  border-radius: 12px;
+}
+
+.menu-favorites-button:hover {
+  background-color: rgba(126, 215, 255, 0.12);
+}
+
+/* ── Grouped Window List (Dock / Taskbar) ── */
+
+.grouped-window-list-item-box {
+  padding: 0 4px;
+  spacing: 3px;
+  transition-duration: 200ms;
+}
+
+.grouped-window-list-item-box:hover {
+  background-color: rgba(255, 255, 255, 0.10);
+  border-radius: 12px;
+}
+
+.grouped-window-list-item-box:active,
+.grouped-window-list-item-box:focus,
+.grouped-window-list-item-box:checked {
+  background-color: rgba(126, 215, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(126, 215, 255, 0.35);
+}
+
+.grouped-window-list-item-demands-attention {
+  background-color: rgba(255, 113, 108, 0.20);
+}
+
+/* Active dot indicator under dock icons */
+.grouped-window-list-badge {
+  background-color: #7ed7ff;
+  border-radius: 50%;
+  width: 6px;
+  height: 6px;
+  margin: 1px auto 0 auto;
+  box-shadow: 0 0 8px rgba(126, 215, 255, 0.60);
+}
+
+.grouped-window-list-number-label {
+  font-size: 8pt;
+  font-weight: 700;
+  color: #ffffff;
+  z-index: 99;
+}
+
+.grouped-window-list-button-label {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 9pt;
+  padding-left: 4px;
+}
+
+/* Thumbnails popup */
+.grouped-window-list-thumbnail-menu {
+  background-color: rgba(12, 14, 23, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  color: #f0f0fd;
+}
+
+.grouped-window-list-thumbnail-label {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 9pt;
+  padding: 4px 8px;
+}
+
+
+/* ============================================================
+   POPUP MENUS — Right-click, submenus, etc.
+   ============================================================ */
+.popup-menu {
+  background-color: rgba(12, 14, 23, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  padding: 6px;
+  color: #f0f0fd;
+}
+
+.popup-menu-content {
+  padding: 6px;
+}
+
+.popup-menu-item {
+  padding: 6px 14px;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.70);
+  spacing: 8px;
+  transition-duration: 150ms;
+}
+
+.popup-menu-item:hover,
+.popup-menu-item:active {
+  background-color: rgba(126, 215, 255, 0.12);
+  color: #7ed7ff;
+}
+
+.popup-menu-item:insensitive {
+  color: rgba(170, 170, 183, 0.40);
+}
+
+.popup-sub-menu {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  margin: 2px 0;
+}
+
+.popup-menu-arrow {
+  icon-size: 12px;
+  color: rgba(255, 255, 255, 0.40);
+}
+
+.popup-inactive-menu-item {
+  color: rgba(255, 255, 255, 0.40);
+}
+
+.popup-menu-icon {
+  icon-size: 18px;
+}
+
+.popup-image-menu-item {
+  padding: 4px 12px;
+}
+
+.popup-combobox-item {
+  padding: 4px 12px;
+}
+
+/* ── Popup Switches / Toggles ── */
+.toggle-switch {
+  width: 40px;
+  height: 20px;
+}
+
+.toggle-switch-us,
+.toggle-switch-intl {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.toggle-switch-us:checked,
+.toggle-switch-intl:checked {
+  background-color: rgba(126, 215, 255, 0.35);
+  border-color: rgba(126, 215, 255, 0.50);
+  box-shadow: 0 0 10px rgba(126, 215, 255, 0.25);
+}
+
+
+/* ============================================================
+   CALENDAR APPLET
+   ============================================================ */
+.calendar {
+  background-color: rgba(12, 14, 23, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  padding: 12px;
+}
+
+.calendar-month-label {
+  color: #f0f0fd;
+  font-size: 12pt;
+  font-weight: 600;
+  padding: 4px 0 8px 0;
+}
+
+.calendar-change-month-back,
+.calendar-change-month-forward {
+  background-color: transparent;
+  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+}
+
+.calendar-change-month-back:hover,
+.calendar-change-month-forward:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.calendar-change-month-back StIcon,
+.calendar-change-month-forward StIcon {
+  icon-size: 14px;
+  color: rgba(255, 255, 255, 0.60);
+}
+
+.calendar-day-heading {
+  color: rgba(255, 255, 255, 0.40);
+  font-size: 8pt;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 4px 6px;
+}
+
+.calendar-day-base {
+  font-size: 10pt;
+  text-align: center;
+  width: 30px;
+  height: 30px;
+  padding: 2px;
+  border-radius: 10px;
+  transition-duration: 150ms;
+}
+
+.calendar-day-base:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.calendar-day {
+  color: rgba(255, 255, 255, 0.70);
+}
+
+.calendar-day-top {
+  border-top-width: 0;
+}
+
+.calendar-day-left {
+  border-left-width: 0;
+}
+
+.calendar-today {
+  background-color: rgba(126, 215, 255, 0.20);
+  color: #7ed7ff;
+  font-weight: 700;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(126, 215, 255, 0.20);
+}
+
+.calendar-not-today {
+  color: rgba(255, 255, 255, 0.70);
+}
+
+.calendar-other-month-day {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.calendar-week-number {
+  color: rgba(255, 255, 255, 0.20);
+  font-size: 8pt;
+  font-weight: 600;
+  padding: 4px;
+}
+
+
+/* ============================================================
+   CLOCK / DATE
+   ============================================================ */
+.clock-display {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.datemenu-date-label {
+  font-size: 16pt;
+  font-weight: 700;
+  color: #f0f0fd;
+  padding: 4px 10px;
+}
+
+.datemenu-today-button {
+  border-radius: 14px;
+  padding: 8px;
+}
+
+.datemenu-today-button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+
+/* ============================================================
+   NOTIFICATIONS
+   ============================================================ */
+.notification {
+  background-color: rgba(12, 14, 23, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  padding: 16px;
+  color: #f0f0fd;
+  margin: 4px;
+}
+
+.notification-icon {
+  icon-size: 36px;
+  padding: 2px 8px 2px 2px;
+}
+
+.notification-body {
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 9pt;
+  padding: 4px 0;
+}
+
+.notification-button {
+  background-color: rgba(126, 215, 255, 0.15);
+  border: 1px solid rgba(126, 215, 255, 0.25);
+  border-radius: 32px;
+  padding: 6px 20px;
+  color: #7ed7ff;
+  font-weight: 600;
+  transition-duration: 200ms;
+}
+
+.notification-button:hover {
+  background-color: rgba(126, 215, 255, 0.25);
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(126, 215, 255, 0.30);
+}
+
+#notification-container {
+  spacing: 6px;
+}
+
+#notification-scrollview {
+  max-height: 300px;
+}
+
+/* ============================================================
+   OVERVIEW / EXPO
+   ============================================================ */
+#overview {
+  spacing: 12px;
+}
+
+.workspace-controls {
+  padding: 8px;
+}
+
+.workspace-thumbnails {
+  spacing: 12px;
+}
+
+.workspace-thumbnails-background {
+  background-color: rgba(12, 14, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  padding: 8px;
+}
+
+.workspace-thumbnail-indicator {
+  border: 2px solid rgba(126, 215, 255, 0.50);
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(126, 215, 255, 0.25);
+}
+
+.workspace-close-button {
+  background-color: rgba(255, 113, 108, 0.80);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  box-shadow: 0 0 8px rgba(255, 113, 108, 0.40);
+}
+
+.expo-background {
+  background-color: rgba(12, 14, 23, 0.85);
+}
+
+.workspace-overview-background-shade {
+  background-color: rgba(12, 14, 23, 0.60);
+}
+
+/* ============================================================
+   WINDOW LIST (Traditional Taskbar)
+   ============================================================ */
+.window-list-item-box {
+  padding: 0 6px;
+  color: rgba(255, 255, 255, 0.60);
+  transition-duration: 200ms;
+  border-radius: 8px;
+  margin: 2px 1px;
+}
+
+.window-list-item-box:hover {
+  background-color: rgba(255, 255, 255, 0.10);
+  color: #f0f0fd;
+}
+
+.window-list-item-box:active,
+.window-list-item-box:focus {
+  background-color: rgba(126, 215, 255, 0.15);
+  color: #7ed7ff;
+  box-shadow: inset 0 -2px 0 #7ed7ff;
+}
+
+.window-list-item-box:demands-attention {
+  background-color: rgba(255, 113, 108, 0.20);
+}
+
+.window-list-item-label {
+  font-size: 9pt;
+  color: inherit;
+}
+
+
+/* ============================================================
+   TOOLTIPS
+   ============================================================ */
+.tooltip {
+  background-color: rgba(12, 14, 23, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  padding: 6px 14px;
+  color: #f0f0fd;
+  font-size: 9pt;
+  text-align: center;
+}
+
+
+/* ============================================================
+   DIALOGS & MODALS
+   ============================================================ */
+.modal-dialog {
+  background-color: rgba(12, 14, 23, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  padding: 24px;
+  color: #f0f0fd;
+}
+
+.modal-dialog-button-box {
+  spacing: 10px;
+  padding-top: 16px;
+}
+
+.modal-dialog-button {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  padding: 8px 24px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+  transition-duration: 200ms;
+}
+
+.modal-dialog-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.modal-dialog-button:focus {
+  background-color: rgba(126, 215, 255, 0.20);
+  color: #7ed7ff;
+  border-color: rgba(126, 215, 255, 0.40);
+  box-shadow: 0 0 15px rgba(126, 215, 255, 0.20);
+}
+
+.run-dialog {
+  background-color: rgba(12, 14, 23, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+}
+
+.run-dialog-label {
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 10pt;
+  font-weight: 600;
+  padding-bottom: 8px;
+}
+
+.run-dialog-entry {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 12px;
+  color: #f0f0fd;
+  padding: 8px 14px;
+  font-size: 11pt;
+  caret-color: #7ed7ff;
+  selection-background-color: rgba(126, 215, 255, 0.25);
+}
+
+.run-dialog-entry:focus {
+  border-color: rgba(126, 215, 255, 0.50);
+  box-shadow: 0 0 12px rgba(126, 215, 255, 0.15);
+}
+
+.run-dialog-error-box {
+  background-color: rgba(255, 113, 108, 0.08);
+  border-radius: 10px;
+  padding: 6px;
+}
+
+.run-dialog-error-label {
+  color: #ff716c;
+}
+
+/* ============================================================
+   LOOKING GLASS (Debug)
+   ============================================================ */
+#LookingGlassDialog {
+  background-color: rgba(12, 14, 23, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  padding: 12px;
+  color: #f0f0fd;
+}
+
+.lg-dialog .lg-header {
+  padding: 6px;
+}
+
+.lg-dialog StEntry {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 10px;
+  color: #f0f0fd;
+  padding: 6px 10px;
+  caret-color: #7ed7ff;
+}
+
+.lg-completions-text {
+  color: #7ed7ff;
+  font-size: 9pt;
+}
+
+.lg-obj-inspector-title {
+  color: #7ed7ff;
+  font-weight: 700;
+}
+
+.lg-obj-inspector-button {
+  background-color: rgba(126, 215, 255, 0.12);
+  border: 1px solid rgba(126, 215, 255, 0.25);
+  border-radius: 8px;
+  padding: 4px 14px;
+  color: #7ed7ff;
+}
+
+.lg-obj-inspector-button:hover {
+  background-color: rgba(126, 215, 255, 0.25);
+}
+
+
+/* ============================================================
+   SCROLLBARS
+   ============================================================ */
+StScrollBar {
+  padding: 0;
+}
+
+StScrollBar StBin#trough {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  margin: 2px;
+}
+
+StScrollBar StButton#vhandle,
+StScrollBar StButton#hhandle {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  margin: 2px;
+  min-width: 6px;
+  min-height: 6px;
+  transition-duration: 200ms;
+}
+
+StScrollBar StButton#vhandle:hover,
+StScrollBar StButton#hhandle:hover {
+  background-color: rgba(126, 215, 255, 0.40);
+  box-shadow: 0 0 6px rgba(126, 215, 255, 0.20);
+}
+
+StScrollBar StButton#vhandle:active,
+StScrollBar StButton#hhandle:active {
+  background-color: rgba(126, 215, 255, 0.60);
+}
+
+
+/* ============================================================
+   SLIDERS (Volume, Brightness)
+   ============================================================ */
+.popup-slider-menu-item {
+  padding: 0 12px;
+  height: 24px;
+}
+
+.popup-slider-menu-item .popup-menu-item {
+  padding: 0;
+}
+
+.slider {
+  -slider-height: 4px;
+  -slider-background-color: rgba(255, 255, 255, 0.08);
+  -slider-border-color: transparent;
+  -slider-active-background-color: #7ed7ff;
+  -slider-active-border-color: transparent;
+  -slider-border-width: 0;
+  -slider-handle-radius: 7px;
+  height: 20px;
+  min-width: 120px;
+  border: 0;
+  border-radius: 4px;
+  color: #7ed7ff;
+}
+
+
+/* ============================================================
+   CHECK & RADIO BOXES
+   ============================================================ */
+.check-box StBin {
+  width: 18px;
+  height: 18px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  transition-duration: 200ms;
+}
+
+.check-box:checked StBin {
+  background-color: rgba(126, 215, 255, 0.30);
+  border-color: rgba(126, 215, 255, 0.50);
+}
+
+.check-box:hover StBin {
+  border-color: rgba(126, 215, 255, 0.40);
+}
+
+.check-box StLabel {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 10pt;
+  padding-left: 6px;
+}
+
+.radiobutton StBin {
+  width: 18px;
+  height: 18px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+}
+
+.radiobutton:checked StBin {
+  background-color: rgba(126, 215, 255, 0.30);
+  border-color: rgba(126, 215, 255, 0.50);
+}
+
+
+/* ============================================================
+   ENTRIES (Text Input)
+   ============================================================ */
+StEntry {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 10px;
+  color: #f0f0fd;
+  padding: 6px 12px;
+  caret-color: #7ed7ff;
+  selection-background-color: rgba(126, 215, 255, 0.25);
+  transition-duration: 200ms;
+}
+
+StEntry:hover {
+  border-color: rgba(255, 255, 255, 0.20);
+}
+
+StEntry:focus {
+  border-color: rgba(126, 215, 255, 0.50);
+  box-shadow: 0 0 10px rgba(126, 215, 255, 0.15);
+}
+
+StEntry:insensitive {
+  background-color: rgba(255, 255, 255, 0.02);
+  color: rgba(170, 170, 183, 0.40);
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+StButton {
+  transition-duration: 200ms;
+}
+
+.notification-button,
+.modal-dialog-button {
+  transition-duration: 200ms;
+}
+
+
+/* ============================================================
+   OSD (On-Screen Display — Volume/Brightness)
+   ============================================================ */
+.osd-window {
+  background-color: rgba(12, 14, 23, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  padding: 16px;
+  spacing: 12px;
+  color: #f0f0fd;
+  min-width: 220px;
+}
+
+.osd-monitor-label {
+  font-size: 28pt;
+  font-weight: 700;
+  color: #7ed7ff;
+}
+
+.level {
+  -slider-height: 6px;
+  -slider-background-color: rgba(255, 255, 255, 0.08);
+  -slider-active-background-color: #7ed7ff;
+  -slider-border-width: 0;
+  height: 6px;
+  border-radius: 3px;
+  color: #7ed7ff;
+}
+
+.level-bar {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+}
+
+
+/* ============================================================
+   DESKTOP ICONS
+   ============================================================ */
+.nemo-desktop.nemo-canvas-item {
+  color: #f0f0fd;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.4);
+  font-size: 10pt;
+  font-weight: 500;
+}
+
+.nemo-desktop.nemo-canvas-item:selected {
+  background-color: rgba(126, 215, 255, 0.15);
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+.nemo-desktop.nemo-canvas-item:hover {
+  text-shadow: 0 0 8px rgba(126, 215, 255, 0.30), 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+
+/* ============================================================
+   CORNER RIPPLE
+   ============================================================ */
+.corner-ripple {
+  background-color: rgba(126, 215, 255, 0.06);
+  border-radius: 0 0 16px 0;
+}
+
+
+/* ============================================================
+   WINDOW ATTENTION ANIMATION
+   ============================================================ */
+@keyframes ethereal-attention {
+  0% { box-shadow: 0 0 0 rgba(126, 215, 255, 0); }
+  50% { box-shadow: 0 0 20px rgba(126, 215, 255, 0.35); }
+  100% { box-shadow: 0 0 0 rgba(126, 215, 255, 0); }
+}
+
+@keyframes ethereal-pulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1.0; }
+  100% { opacity: 0.7; }
+}
+
+
+/* ============================================================
+   MEDIA KEYS OSD
+   ============================================================ */
+.osd-window StIcon {
+  icon-size: 48px;
+  color: #7ed7ff;
+}
+
+
+/* ============================================================
+   WORKSPACE SWITCHER APPLET
+   ============================================================ */
+.workspace-switcher {
+  spacing: 4px;
+  padding: 2px;
+}
+
+.workspace-button {
+  width: 22px;
+  height: 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 4px;
+  transition-duration: 200ms;
+}
+
+.workspace-button:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.20);
+}
+
+.workspace-button:outlined {
+  background-color: rgba(126, 215, 255, 0.20);
+  border-color: rgba(126, 215, 255, 0.45);
+  box-shadow: 0 0 8px rgba(126, 215, 255, 0.25);
+}
+
+
+/* ============================================================
+   SOUND / POWER / NETWORK APPLETS
+   ============================================================ */
+.sound-player {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  padding: 10px;
+  margin: 4px 0;
+}
+
+.sound-player-cover {
+  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+}
+
+.sound-player .slider {
+  -slider-height: 4px;
+}
+
+.sound-player-generic-coverart {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.nm-dialog {
+  background-color: rgba(12, 14, 23, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.nm-dialog-header {
+  font-size: 13pt;
+  font-weight: 700;
+  color: #f0f0fd;
+}
+
+.nm-dialog-item {
+  padding: 8px;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.nm-dialog-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.nm-dialog-item:selected {
+  background-color: rgba(126, 215, 255, 0.12);
+  color: #7ed7ff;
+}
+
+
+/* ============================================================
+   USER SWITCH / SESSION DIALOG
+   ============================================================ */
+.end-session-dialog {
+  background-color: rgba(12, 14, 23, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.end-session-dialog-warning {
+  color: #ff716c;
+  font-weight: 600;
+}
+
+.end-session-dialog-description {
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 10pt;
+}
+
+.end-session-dialog-logout-icon {
+  icon-size: 48px;
+  color: #7ed7ff;
+}
+
+.end-session-dialog-shutdown-icon {
+  icon-size: 48px;
+  color: #ff716c;
+}
+
+
+/* ============================================================
+   PANEL LAUNCHERS
+   ============================================================ */
+.panel-launchers .launcher {
+  padding: 2px 4px;
+  border-radius: 12px;
+  transition-duration: 200ms;
+}
+
+.panel-launchers .launcher:hover {
+  background-color: rgba(126, 215, 255, 0.12);
+  box-shadow: 0 0 12px rgba(126, 215, 255, 0.15);
+}
+
+.panel-launchers .launcher .icon-box {
+  padding: 2px;
+}
+
+
+/* ============================================================
+   SEPARATOR
+   ============================================================ */
+.separator {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.popup-separator-menu-item {
+  background-color: rgba(255, 255, 255, 0.06);
+  height: 1px;
+  margin: 6px 10px;
+}
+
+
+/* ============================================================
+   USER APPLET
+   ============================================================ */
+.user-icon {
+  icon-size: 48px;
+  border-radius: 24px;
+  border: 2px solid rgba(126, 215, 255, 0.25);
+}
+
+.user-label {
+  color: #f0f0fd;
+  font-size: 12pt;
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   POWER APPLET
+   ============================================================ */
+.power-status {
+  color: #7ed7ff;
+  font-size: 9pt;
+}
+
+.power-status.power-status-low {
+  color: #ff716c;
+}
+
+/* Battery icon styling */
+.system-status-icon {
+  icon-size: 18px;
+  color: rgba(255, 255, 255, 0.70);
+}
+
+
+/* ============================================================
+   CINNAMON SPECIFIC
+   ============================================================ */
+.cinnamon-link {
+  color: #7ed7ff;
+  font-weight: 600;
+}
+
+.cinnamon-link:hover {
+  color: #a3e5ff;
+}
+
+/* Hot corner ripple */
+.ripple-box {
+  background-color: rgba(126, 215, 255, 0.08);
+  border-radius: 50%;
+  width: 68px;
+  height: 68px;
+}
+
+/* Tile preview — ghost border style */
+.tile-preview {
+  background-color: rgba(126, 215, 255, 0.08);
+  border: 1px solid rgba(126, 215, 255, 0.30);
+  border-radius: 16px;
+}
+
+.tile-hud {
+  background-color: rgba(126, 215, 255, 0.08);
+  border: 1px solid rgba(126, 215, 255, 0.30);
+  border-radius: 16px;
+}
+
+/* Snap OSD */
+.snap-osd {
+  background-color: rgba(12, 14, 23, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 10px;
+}
+
+
+/* ============================================================
+   SHOW DESKTOP / SCALE
+   ============================================================ */
+.iconGrid {
+  spacing: 14px;
+}
+
+.overview-icon {
+  icon-size: 48px;
+  border-radius: 14px;
+}
+
+.overview-icon-with-label {
+  padding: 6px;
+  spacing: 4px;
+}
+
+.overview-icon-with-label > StLabel {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 9pt;
+}
+
+
+/* ============================================================
+   DESKLET DECORATIONS
+   ============================================================ */
+.desklet {
+  color: #f0f0fd;
+}
+
+.desklet-with-borders {
+  background-color: rgba(12, 14, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  padding: 14px;
+  color: #f0f0fd;
+}
+
+.desklet-with-borders-and-header .desklet-header {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 16px 16px 0 0;
+  padding: 8px 14px;
+  font-size: 11pt;
+  font-weight: 600;
+  color: #f0f0fd;
+}
+
+.desklet-drag-placeholder {
+  border: 2px dashed rgba(126, 215, 255, 0.30);
+  border-radius: 16px;
+  background-color: rgba(126, 215, 255, 0.04);
+}
+
+.photoframe-box {
+  background-color: rgba(12, 14, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+
+/* ============================================================
+   APPLET BOX — Global spacing
+   ============================================================ */
+.applet-box {
+  padding: 0 8px;
+}
+
+
+/* ============================================================
+   End of EtherealOS — "The Ethereal Architect" Theme
+   Cosmic blue-cyan glassmorphism with ghost borders
+   ============================================================ */
+
+/* ============================================================
+   DESKLETS: Transparent Glass Widgets for Pro Feel
+   ============================================================ */
+.desklet {
+  color: #f0f0fd;
+}
+.desklet-with-borders {
+  background-color: rgba(12, 14, 23, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  padding: 12px;
+}
+.desklet-with-borders-and-header {
+  background-color: rgba(12, 14, 23, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+}
+.desklet-header {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #7ed7ff;
+  border-radius: 24px 24px 0 0;
+}
+
+/* ============================================================
+   NOTIFICATIONS AND TOOLTIPS: Premium Floating Cards
+   ============================================================ */
+#Notification, .notification {
+  background-color: rgba(12, 14, 23, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  color: #f0f0fd;
+  padding: 16px;
+  margin-top: 10px;
+}
+
+#Notification .notification-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+#Notification .notification-button:hover {
+  background-color: rgba(126, 215, 255, 0.3);
+}
+
+#Tooltip {
+  background-color: rgba(12, 14, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  color: #ffffff;
+  padding: 8px 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
