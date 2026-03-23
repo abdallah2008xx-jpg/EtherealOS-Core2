@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=EtherealOS Update
+Comment=Fetch latest system patches from GitHub
+Exec=bash -c "cd /media/sf_gentoo-files && bash Ethereal-Update.sh; read -p 'Press Enter to Close...'"
+Icon=system-software-update
+Terminal=true
+Categories=System;Settings;
+Keywords=update;patch;ethereal;
