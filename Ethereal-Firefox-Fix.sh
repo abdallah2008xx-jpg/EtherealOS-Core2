@@ -1,79 +1,50 @@
 #!/bin/bash
 # ==========================================================
-# EtherealOS - Ultimate Browser Fixer (v1.4.0)
-# Included in Update v1.4.0 - Thor Browser Integration
+# EtherealOS - Ultimate Browser Fixer (v2.0.0)
+# Included in Update v3.2.0 - NUCLEAR PROFILE RESET
 # ==========================================================
 
 echo "🦊 Starting Advanced Browser Repair Engine..."
 
-# Step 1: Force Kill Firefox if running
+# Step 1: Force Kill Firefox and Wipe Corruption
 su -c "pkill -f firefox" 2>/dev/null
+su -c "pkill -f epiphany" 2>/dev/null
 su -c "pkill -f thor" 2>/dev/null
 
-# Step 2: Atomic Reset & Permission Overhaul
-echo "🔧 Executing Aggressive Browser Reconstruction..."
+echo "🔧 Executing Ultra-Deep Profile Reconstruction..."
+
+# Step 2: Nuclear Cleaning & Reconstruction of Home Folders
 su -c "
-    # Fix current user home permissions (Absolute Fix)
+    # Correct all base permissions
     chown -R abdallah:abdallah /home/abdallah
     
-    # Purge broken profiles (Nuclear Option for stability)
+    # Absolute Wipe of mozilla folder to clear 'Profile Missing' errors
     rm -rf /home/abdallah/.mozilla
     rm -rf /home/abdallah/.cache/mozilla
-    rm -rf /home/abdallah/.thor
     
-    # Re-create fresh clean directories
-    mkdir -p /home/abdallah/.mozilla
+    # Re-build the structure manually (Firefox hates missing root dirs)
+    mkdir -p /home/abdallah/.mozilla/firefox/ethereal.default
+    
+    # Create the CRITICAL profiles.ini file (This solves the popup!)
+    cat << 'INI' > /home/abdallah/.mozilla/firefox/profiles.ini
+[General]
+StartWithLastProfile=1
+
+[Profile0]
+Name=Ethereal
+IsRelative=1
+Path=ethereal.default
+Default=1
+INI
+
+    # Final ownership fix on the new files
     chown -R abdallah:abdallah /home/abdallah/.mozilla
 " > /dev/null 2>&1
 
-# Step 3: Ensure Thor (Epiphany Engine) is available and linked
-if ! command -v thor >/dev/null 2>&1; then
-    echo "📦 Deploying Thor Browser Engine..."
-    # If epiphany exists, link it to thor. If not, try to install.
-    if command -v epiphany >/dev/null 2>&1; then
-        su -c "ln -sf /usr/bin/epiphany /usr/bin/thor" > /dev/null 2>&1
-    else
-        # Try emergency background install
-        su -c "emerge --ask=n epiphany" > /dev/null 2>&1 &
-    fi
+# Step 3: Ensure Thor (Emergency Backup) works too
+if command -v epiphany >/dev/null 2>&1; then
+    su -c "ln -sf /usr/bin/epiphany /usr/bin/thor" > /dev/null 2>&1
 fi
 
 # Step 4: Final Success Notification
-zenity --notification --text="🦊 Firefox & ⚡ Thor Browsers have been re-calibrated!" 2>/dev/null
-
-# Step 3: Emergency Browser Alternative (Thor Browser)
-if [ "$BROWSER_MISSING" = true ]; then
-    zenity --question --title="Browser Rescue" --text="Firefox repair failed or it's missing.\n\nWould you like to install the 'Thor Browser' (Optimized for EtherealOS) instead?" --width=350
-    if [ $? -eq 0 ]; then
-        (
-            echo "10"; echo "# Connecting to secure download servers..." ; sleep 1
-            echo "40"; echo "# Downloading Thor Browser Core..."
-            # For now, we will 'install' it by symlinking or using a lighter alternative like Midori/Epiphany 
-            # but we will call it 'Thor' for the user experience.
-            # In a real scenario, we'd wget a binary. 
-            sudo -A emerge --ask=n epiphany >/dev/null 2>&1
-            echo "80"; echo "# Optimizing Thor for EtherealOS..."
-            sudo -A ln -sf /usr/bin/epiphany /usr/bin/thor
-            
-            # Create Desktop Icon
-            cat << 'THOR' > /home/abdallah/Desktop/Thor_Browser.desktop
-[Desktop Entry]
-Type=Application
-Name=⚡ Thor Browser
-Comment=Ultra-fast EtherealOS Browser
-Exec=thor
-Icon=web-browser
-Terminal=false
-Categories=Network;WebBrowser;
-THOR
-            chmod +x /home/abdallah/Desktop/Thor_Browser.desktop
-            chown abdallah:abdallah /home/abdallah/Desktop/Thor_Browser.desktop
-
-            echo "100"; echo "# Thor Browser Successfully Installed!"
-        ) | zenity --progress --title="EtherealOS Browser Rescue" --percentage=0 --auto-close
-        
-        zenity --info --title="Rescue Complete" --text="⚡ Thor Browser is now ready on your desktop!"
-    fi
-else
-    zenity --notification --window-icon="firefox" --text="🦊 Firefox Profile successfully repaired!"
-fi
+zenity --info --title="Browser Repaired" --text="🦊 Firefox Profile has been reconstructed!\n\nTry opening it now. It will start with a fresh 'Ethereal' profile.\n\n⚡ Thor Browser is also available as backup." --width=350 2>/dev/null
