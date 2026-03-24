@@ -64,7 +64,7 @@ button.kill-btn:hover { background: rgba(255, 80, 80, 0.9); color: white; box-sh
     border: 1px solid rgba(255,255,255,0.05);
     border-radius: 16px; padding: 25px; margin: 10px 20px;
 }
-.dash-stat-title { color: #a3b2fa; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+.dash-stat-title { color: #a3b2fa; font-size: 14px; }
 .dash-stat-val { color: #ffffff; font-size: 28px; font-weight: bold; margin-top: 5px; }
 
 /* Startup Apps */
