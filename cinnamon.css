@@ -402,37 +402,38 @@ stage {
 
 
 /* ============================================================
-   POPUP MENUS — Right-click, submenus, etc.
+   POPUP MENUS — Right-click, submenus, etc. (Windows 11 Style)
    ============================================================ */
 .popup-menu {
-  background-color: rgba(12, 14, 23, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  background-color: rgba(30, 32, 40, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.70);
   padding: 6px;
-  color: #f0f0fd;
+  color: #eeeeee;
 }
 
 .popup-menu-content {
-  padding: 6px;
+  padding: 4px;
 }
 
 .popup-menu-item {
-  padding: 6px 14px;
-  border-radius: 10px;
-  color: rgba(255, 255, 255, 0.70);
-  spacing: 8px;
-  transition-duration: 150ms;
+  padding: 8px 14px;
+  margin: 2px 6px; /* Inner margin gives the rounded hover effect */
+  border-radius: 8px;
+  color: #dddddd;
+  spacing: 12px;
+  transition-duration: 100ms;
 }
 
 .popup-menu-item:hover,
 .popup-menu-item:active {
-  background-color: rgba(126, 215, 255, 0.12);
-  color: #7ed7ff;
+  background-color: rgba(255, 255, 255, 0.08); /* Soft white hover */
+  color: #ffffff;
 }
 
 .popup-menu-item:insensitive {
-  color: rgba(170, 170, 183, 0.40);
+  color: rgba(255, 255, 255, 0.25);
 }
 
 .popup-sub-menu {

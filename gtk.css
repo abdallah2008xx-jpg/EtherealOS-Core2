@@ -357,26 +357,39 @@ tooltip.background {
     color: #f0f0fd;
 }
 
-/* ── Context Menus ── */
+/* ── Context Menus (Windows 11 Style) ── */
 menu,
 .context-menu,
-.popup {
-    background-color: rgba(10, 12, 20, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.10);
+.popup,
+popover {
+    background-color: rgba(30, 32, 40, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 14px;
     padding: 6px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.50);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.70);
+    color: #eeeeee;
 }
 
-menu menuitem {
+menu menuitem,
+popover modelbutton {
     border-radius: 8px;
-    padding: 6px 12px;
-    transition: all 150ms ease;
+    padding: 6px 14px;
+    margin: 2px 6px; /* Inner separation from edges */
+    min-height: 28px;
+    color: #dddddd;
+    transition: all 100ms ease;
 }
 
-menu menuitem:hover {
-    background: linear-gradient(135deg, rgba(126, 215, 255, 0.15), rgba(163, 178, 250, 0.10));
+menu menuitem:hover,
+popover modelbutton:hover {
+    background-color: rgba(255, 255, 255, 0.08); /* Soft white Windows 11 hover */
     color: #ffffff;
+}
+
+menu separator,
+popover separator {
+    margin: 6px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ── Notebooks / Tabs ── */
