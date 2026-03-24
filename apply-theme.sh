@@ -59,10 +59,16 @@ gsettings set org.cinnamon.desktop.wm.preferences theme "Adwaita-dark"
 # Live reload the theme CSS using D-Bus (No heavy restart needed!)
 dbus-send --session --dest=org.Cinnamon --print-reply /org/Cinnamon org.Cinnamon.Eval string:'let Main = imports.ui.main; Main.themeManager._changeTheme();' > /dev/null 2>&1 || gsettings set org.cinnamon.theme name "Ethereal"
 
-echo "[3/9] ✅ Dark GTK theme set & dynamically reloaded."
+# Force GTK to reload its cache by toggling themes briefly
+gsettings set org.cinnamon.desktop.interface gtk-theme "Adwaita"
+sleep 0.5
 gsettings set org.cinnamon.desktop.interface gtk-theme "Adwaita-dark"
 gsettings set org.cinnamon.desktop.wm.preferences theme "Adwaita-dark"
-echo "[3/9] ✅ Dark GTK theme set."
+
+# Gracefully push desktop icons and menus to apply the new GTK CSS
+nemo-desktop -q 2>/dev/null && nohup nemo-desktop >/dev/null 2>&1 &
+
+echo "[3/9] ✅ Dark GTK theme set & dynamically reloaded."
 
 # ── 4. Icons ──
 gsettings set org.cinnamon.desktop.interface icon-theme "Papirus-Dark"
