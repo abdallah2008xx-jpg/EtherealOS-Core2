@@ -116,6 +116,32 @@ gsettings set org.cinnamon.desktop.background picture-uri "file://$HOME/.backgro
 # Apply keyboard to US
 dconf write /org/cinnamon/desktop/input-sources/sources "[('xkb','us')]" 2>/dev/null
 
+# ── 10. Install Cinnamon Panel Extension (Task Manager Right-Click) ──
+EXT_ID="ethereal-taskmgr@etherealos.com"
+EXT_DIR="$HOME/.local/share/cinnamon/extensions/$EXT_ID"
+mkdir -p "$EXT_DIR"
+if [ -d "$SCRIPT_DIR/$EXT_ID" ]; then
+    cp -r "$SCRIPT_DIR/$EXT_ID/"* "$EXT_DIR/"
+    echo "[10/10] ✅ Cinnamon Panel Extension installed → $EXT_DIR"
+else
+    echo "⚠️ Extension folder not found, skipping."
+fi
+
+# Enable the extension via dconf (safe, non-destructive merge)
+CURRENT_EXTS=$(gsettings get org.cinnamon enabled-extensions 2>/dev/null | tr -d "[]'" | tr ',' '\n' | grep -v "^$" | grep -v "$EXT_ID" | tr '\n' ',' | sed 's/,$//')
+if [ -n "$CURRENT_EXTS" ]; then
+    NEW_EXTS="['${CURRENT_EXTS//,/\',\'}', '$EXT_ID']"
+else
+    NEW_EXTS="['$EXT_ID']"
+fi
+gsettings set org.cinnamon enabled-extensions "$NEW_EXTS" 2>/dev/null
+
+# Hot-reload Cinnamon extensions without restart
+dbus-send --session --dest=org.Cinnamon --print-reply /org/Cinnamon org.Cinnamon.Eval \
+  string:'Main.extensionManager.reloadExtension("'"$EXT_ID"'", 2)' > /dev/null 2>&1 || true
+
+echo "[10/10] ✅ Task Manager wired into Panel right-click menu!"
+
 echo "[9/9] ✅ EtherealOS — The Ethereal Architect — ACTIVATED!"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
