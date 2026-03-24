@@ -5,6 +5,9 @@
 # ==========================================================
 
 (
+# --- FORCED PROOF OF NOTIFICATION ---
+zenity --info --title="🪐 EtherealOS Update Available!" --text="Your system has discovered 3 new extraterrestrial updates on GitHub.\n\nApplying them now..." --width=400 2>/dev/null
+
 echo "10"; echo "# 📡 Contacting Ethereal Update Servers..." ; sleep 1
 cd "$(dirname "$0")"
 
