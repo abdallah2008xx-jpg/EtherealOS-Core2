@@ -14,9 +14,8 @@ LOCAL=$(git rev-parse @ 2>/dev/null)
 REMOTE=$(git rev-parse "$UPSTREAM" 2>/dev/null)
 
 if [ "$LOCAL" = "$REMOTE" ]; then
-    echo "100"; echo "# ✅ Your EtherealOS is already up to date!"
-    sleep 2
-    exit 0
+    echo "30"; echo "# ⬇️ System is synced. Refreshing local application components..."
+    sleep 1
 fi
 
 echo "40"; echo "# ⬇️ Downloading New Ethereal Features & Patches..."
