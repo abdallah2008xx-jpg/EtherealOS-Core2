@@ -1,39 +1,48 @@
 #!/bin/bash
 # ==========================================================
-# EtherealOS OTA Global Updater v1.1.0
-# Optimized for Seamless GitHub Synchronization
+# EtherealOS Update 1.2.0 - Graphical Auto-Updater
+# Replaces the old terminal update with a premium Windows-style UI
 # ==========================================================
 
-REPO_URL="https://github.com/abdallah2008xx-jpg/EtherealOS-Core"
+(
+echo "10"; echo "# 📡 Contacting Ethereal Update Servers..." ; sleep 1
+cd "$(dirname "$0")"
 
-echo "📡 Contacting Ethereal Update Servers..."
+git fetch origin main > /dev/null 2>&1
+UPSTREAM=${1:-'@{u}'}
+LOCAL=$(git rev-parse @ 2>/dev/null)
+REMOTE=$(git rev-parse "$UPSTREAM" 2>/dev/null)
 
-# Check if running inside a Git directory, if not, download the fresh repo
-if [ ! -d ".git" ]; then
-    echo "⬇️ Downloading Ethereal Core Bundle..."
-    git clone $REPO_URL.git /tmp/ethereal-update
-    cd /tmp/ethereal-update
-else
-    echo "🔄 Checking for new system patches..."
-    git fetch origin main
-    
-    # Check if local is behind remote
-    UPSTREAM=${1:-'@{u}'}
-    LOCAL=$(git rev-parse @)
-    REMOTE=$(git rev-parse "$UPSTREAM")
-    
-    if [ $LOCAL = $REMOTE ]; then
-        echo "✅ Your EtherealOS is already up to date!"
-        exit 0
-    else
-        echo "⚠️ New extraterrestrial update detected! Applying..."
-        git pull origin main
-    fi
+if [ "$LOCAL" = "$REMOTE" ]; then
+    echo "100"; echo "# ✅ Your EtherealOS is already up to date!"
+    sleep 2
+    exit 0
 fi
 
-# Apply the actual visual/system updates
-echo "⚙️ Re-compiling system visuals..."
-bash Ethereal-Final-Polish.sh
-bash apply-theme.sh
+echo "40"; echo "# ⬇️ Downloading New Ethereal Features & Patches..."
+git pull origin main > /dev/null 2>&1
+sleep 2
 
-echo "✨ EtherealOS is now powered by the latest core! (v1.1.0)"
+echo "70"; echo "# ⚙️ Installing Core Updates & Recompiling System..."
+bash Ethereal-Final-Polish.sh > /dev/null 2>&1
+bash apply-theme.sh > /dev/null 2>&1
+
+# Apply Firefox Patch
+if [ -f "Ethereal-Firefox-Fix.sh" ]; then
+    echo "80"; echo "# 🦊 Patching Firefox Profile Permissions..."
+    bash Ethereal-Firefox-Fix.sh > /dev/null 2>&1
+fi
+
+# Deploy new features included in this update
+if [ -f "Ethereal-GameBoost.sh" ]; then
+    echo "85"; echo "# 🚀 Installing NEW Feature: Ethereal Game Boost..."
+    bash Ethereal-GameBoost.sh --install > /dev/null 2>&1
+    sleep 1
+fi
+
+    echo "100"; echo "# ✨ EtherealOS Update Successfully Installed!"
+    sleep 2
+    zenity --info --title="Update Success" --text="Update v1.3.0 Applied!\n\nNew Features Added:\n- Ethereal Snipping Tool (Win + Shift + S)\n- Firefox Deep Permission Fix\n- Premium GUI Updater\n- Ethereal Game Boost.\n\nEnjoy the extraterrestrial performance!" --width=350 &
+) | zenity --progress --title="🪐 EtherealOS System Update" \
+           --text="Initializing Update Engine..." \
+           --percentage=0 --auto-close --auto-kill --width=450

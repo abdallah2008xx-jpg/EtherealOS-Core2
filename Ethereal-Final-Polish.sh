@@ -37,7 +37,21 @@ EOF
 
 echo "command -v neofetch >/dev/null 2>&1 && neofetch --source ~/.config/neofetch/ethereal.txt --ascii_colors 6 4" >> ~/.bashrc
 
-echo "5. Reloading Window Manager..."
+echo "5. Adding Windows+Shift+S for Snip/Area Screenshot..."
+gsettings set org.cinnamon.desktop.keybindings.media-keys area-screenshot "['<Shift><Super>s']" 2>/dev/null
+# Add a custom keybinding fallback just in case the media-keys binding defaults are wonky
+CUSTOM_LIST=$(gsettings get org.cinnamon.desktop.keybindings custom-list 2>/dev/null | grep -v 'custom-snip')
+if [ -n "$CUSTOM_LIST" ] && [ "$CUSTOM_LIST" != "@as []" ]; then
+    NEW_LIST=$(echo "$CUSTOM_LIST" | sed "s/\]/, 'custom-snip'\]/")
+else
+    NEW_LIST="['custom-snip']"
+fi
+gsettings set org.cinnamon.desktop.keybindings custom-list "$NEW_LIST" 2>/dev/null
+gsettings set org.cinnamon.desktop.keybindings.custom-keybinding:/org/cinnamon/desktop/keybindings/custom-keybindings/custom-snip/ name "Ethereal Snipping Tool" 2>/dev/null
+gsettings set org.cinnamon.desktop.keybindings.custom-keybinding:/org/cinnamon/desktop/keybindings/custom-keybindings/custom-snip/ command "gnome-screenshot -a" 2>/dev/null
+gsettings set org.cinnamon.desktop.keybindings.custom-keybinding:/org/cinnamon/desktop/keybindings/custom-keybindings/custom-snip/ binding "['<Shift><Super>s']" 2>/dev/null
+
+echo "6. Reloading Window Manager..."
 nohup cinnamon --replace >/dev/null 2>&1 &
 
 echo "EtherealOS Final Polish Complete!"
