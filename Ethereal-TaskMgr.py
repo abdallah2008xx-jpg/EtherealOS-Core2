@@ -431,7 +431,26 @@ class TaskManager(Gtk.Window):
             print("Ethereal-TaskMgr Error:", e)
         return True
 
-win = TaskManager()
-win.connect("destroy", Gtk.main_quit)
-win.show_all()
-Gtk.main()
+if __name__ == "__main__":
+    try:
+        win = TaskManager()
+        win.connect("destroy", Gtk.main_quit)
+        win.show_all()
+        Gtk.main()
+    except Exception as fatal_error:
+        import traceback
+        err_msg = traceback.format_exc()
+        
+        err_win = Gtk.Window(title="Task Manager Crash Reporter")
+        err_win.set_default_size(600, 400)
+        
+        scroll = Gtk.ScrolledWindow()
+        l = Gtk.Label(label=f"Fatal Initialization Error:\n\n{err_msg}")
+        l.set_selectable(True)
+        l.set_halign(Gtk.Align.START)
+        scroll.add(l)
+        err_win.add(scroll)
+        
+        err_win.show_all()
+        err_win.connect("destroy", Gtk.main_quit)
+        Gtk.main()
