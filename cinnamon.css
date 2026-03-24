@@ -66,14 +66,28 @@ stage {
 }
 
 .panel-bottom {
+  background-color: transparent;
+  margin: 0 0 12px 0;
+  box-shadow: none;
+  border: none;
+}
+
+/* Hide auto-created panel-launchers on the left/right of the bottom panel */
+.panel-bottom .panelLeft,
+.panel-bottom .panelRight {
+  width: 0px !important;
+  opacity: 0 !important;
+}
+
+/* Make the center box contain the pill design */
+.panel-bottom .panelCenter {
   background-color: rgba(255, 255, 255, 0.10);
   border: 1px solid rgba(255, 255, 255, 0.20);
   border-radius: 48px;
   box-shadow: 0 -10px 50px rgba(0, 0, 0, 0.5);
-  margin: 0 25% 16px 25%;
+  padding: 0 16px;
 }
 
-.panel-left {
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 24px;
