@@ -1,11 +1,10 @@
 #!/bin/bash
 # ==========================================================
 # EtherealOS Update v4.12 - LIGHTWEIGHT Auto-Updater
-# Uses hidden ~/.ethereal-update directory so files don't
-# clutter the user's home or file manager.
 # ==========================================================
 
-REPO_DIR="$HOME/.ethereal-update"
+cd "$(dirname "$0")"
+REPO_DIR="$(pwd)"
 cd "$REPO_DIR" 2>/dev/null || exit 1
 
 # ═══════════════════════════════════════════

@@ -26,7 +26,7 @@ class EtherealTaskMgrApplet extends Applet.Applet {
             St.IconType.FULLCOLOR
         );
         item.connect('activate', Lang.bind(this, function() {
-            Util.spawnCommandLine("python3 " + GLib.get_home_dir() + "/.ethereal-update/Ethereal-TaskMgr.py");
+            Util.spawnCommandLine("python3 " + GLib.get_home_dir() + "/ethereal-update/Ethereal-TaskMgr.py");
         }));
         this._applet_context_menu.addMenuItem(item);
         
