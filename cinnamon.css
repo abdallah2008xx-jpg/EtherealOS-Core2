@@ -173,15 +173,15 @@ stage {
 
 /* ── Menu Applet (App Launcher) — PREMIUM ETHEREAL DESIGN ── */
 .menu {
-  background-color: rgba(8, 10, 18, 0.88);
-  border: 1px solid rgba(126, 215, 255, 0.12);
-  border-radius: 28px;
+  background-color: rgba(8, 10, 18, 0.88) !important;
+  border: 1px solid rgba(126, 215, 255, 0.12) !important;
+  border-radius: 28px !important;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65),
               0 0 60px rgba(126, 215, 255, 0.06),
-              inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  padding: 16px;
-  min-width: 440px;
-  color: #f0f0fd;
+              inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  padding: 16px !important;
+  min-width: 440px !important;
+  color: #f0f0fd !important;
 }
 
 .menu-favorites-box {
@@ -419,15 +419,17 @@ stage {
    POPUP MENUS — Right-click, submenus, etc. (Windows 11 Style)
    ============================================================ */
 .popup-menu,
+.menu,
+#menu,
 .context-menu,
 .popup-menu-boxpointer {
-  background-color: rgba(12, 14, 23, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  padding: 6px;
-  margin: 4px;
-  color: #f0f0fd;
+  background-color: rgba(12, 14, 23, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+  padding: 6px !important;
+  margin: 4px !important;
+  color: #f0f0fd !important;
 }
 
 .popup-menu-content {
