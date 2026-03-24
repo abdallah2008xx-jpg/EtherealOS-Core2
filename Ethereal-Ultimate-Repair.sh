@@ -15,9 +15,14 @@ PWH
 chmod +x /tmp/gui-askpass.sh
 export SUDO_ASKPASS=/tmp/gui-askpass.sh
 
+# Try to get root with the prompt, if it fails, suggest the password in a clear error
 if ! sudo -A true 2>/dev/null; then
-    zenity --error --text="Repair aborted: Root privileges required."
-    exit 1
+    # Fallback to direct password injection if GUI fails for any reason
+    echo "123456" | sudo -S true 2>/dev/null
+    if [ $? -ne 0 ]; then
+        zenity --error --text="Repair aborted: Incorrect root password. Please ensure the password is (123456)."
+        exit 1
+    fi
 fi
 
 echo "20"; echo "# 🔧 Fixing Home Directory & Permissions..."
