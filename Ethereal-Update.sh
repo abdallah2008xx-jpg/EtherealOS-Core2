@@ -1,11 +1,10 @@
 #!/bin/bash
 # ==========================================================
-# EtherealOS Update v4.12 - LIGHTWEIGHT Auto-Updater
+# EtherealOS Update v4.13 - LIGHTWEIGHT Auto-Updater
 # ==========================================================
 
 cd "$(dirname "$0")"
 REPO_DIR="$(pwd)"
-cd "$REPO_DIR" 2>/dev/null || exit 1
 
 # ═══════════════════════════════════════════
 # STEP 1: Fix Browser FIRST (outside zenity pipe!)
@@ -40,13 +39,18 @@ cp Ethereal-Notifier-Autostart.desktop /home/abdallah/.config/autostart/ 2>/dev/
 (
 echo "10"; echo "# 📡 Contacting Ethereal Servers..." ; sleep 1
 
-echo "30"; echo "# ⬇️ Downloading Updates..."
+echo "25"; echo "# ⬇️ Downloading Updates..."
 git pull origin main > /dev/null 2>&1
 sleep 1
 
+echo "45"; echo "# 🧹 Cleaning old desktop icons..."
+# Remove ALL old .desktop files from Desktop, then re-copy fresh ones
+# This ensures deleted icons (like TaskMgr) get removed properly
+rm -f /home/abdallah/Desktop/*.desktop 2>/dev/null
+
 echo "55"; echo "# 📂 Deploying Desktop Icons..."
 mkdir -p /home/abdallah/Desktop
-# Copy all desktop files EXCEPT internal Autostart files
+# Copy all .desktop files from repo EXCEPT internal Autostart ones
 find "$REPO_DIR" -maxdepth 1 -name "*.desktop" ! -name "*-Autostart.desktop" -exec cp {} /home/abdallah/Desktop/ \;
 chmod +x /home/abdallah/Desktop/*.desktop 2>/dev/null
 
