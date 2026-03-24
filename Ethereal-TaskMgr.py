@@ -78,9 +78,7 @@ switch { background: #333; border-radius: 14px; min-width: 50px; }
 switch:checked { background: #00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.3); }
 """
 
-provider = Gtk.CssProvider()
-provider.load_from_data(CSS)
-Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+# CSS is loaded inside __main__ to ensure exceptions are caught.
 
 class SysTracker:
     def __init__(self):
