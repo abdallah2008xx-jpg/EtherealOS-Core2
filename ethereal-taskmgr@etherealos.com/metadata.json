@@ -1,7 +1,8 @@
 {
     "uuid": "ethereal-taskmgr@etherealos.com",
-    "name": "Ethereal Task Manager Integration",
-    "description": "Adds Windows-like Task Manager to the Cinnamon Panel Right-Click Menu",
+    "name": "Ethereal Task Manager",
+    "description": "Right-click the panel to open Task Manager",
+    "max-instances": "1",
     "cinnamon-version": ["5.0", "5.2", "5.4", "5.6", "5.8", "6.0", "6.2", "6.4"],
     "version": "1.0",
     "author": "EtherealOS"

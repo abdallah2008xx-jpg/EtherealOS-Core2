@@ -1,9 +1,12 @@
 #!/bin/bash
 # ==========================================================
-# EtherealOS Update v4.6.0 - LIGHTWEIGHT Auto-Updater
+# EtherealOS Update v4.12 - LIGHTWEIGHT Auto-Updater
+# Uses hidden ~/.ethereal-update directory so files don't
+# clutter the user's home or file manager.
 # ==========================================================
 
-cd "$(dirname "$0")"
+REPO_DIR="$HOME/.ethereal-update"
+cd "$REPO_DIR" 2>/dev/null || exit 1
 
 # ═══════════════════════════════════════════
 # STEP 1: Fix Browser FIRST (outside zenity pipe!)
@@ -42,10 +45,12 @@ echo "30"; echo "# ⬇️ Downloading Updates..."
 git pull origin main > /dev/null 2>&1
 sleep 1
 
-echo "60"; echo "# 📂 Deploying Desktop Icons..."
+echo "55"; echo "# 📂 Deploying Desktop Icons..."
 mkdir -p /home/abdallah/Desktop
-# Do not copy internal Autostart files to desktop
-find . -maxdepth 1 -name "*.desktop" ! -name "*-Autostart.desktop" -exec cp {} /home/abdallah/Desktop/ \;
+# Only copy whitelisted desktop files — never all files!
+for ICON in Update_Ethereal Firefox Ethereal-TaskMgr; do
+    [ -f "$REPO_DIR/${ICON}.desktop" ] && cp "$REPO_DIR/${ICON}.desktop" /home/abdallah/Desktop/
+done
 chmod +x /home/abdallah/Desktop/*.desktop 2>/dev/null
 
 echo "80"; echo "# 🎨 Applying Theme..."
@@ -57,4 +62,5 @@ sleep 1
            --text="Checking for updates..." \
            --percentage=0 --auto-close --auto-kill --width=400 2>/dev/null
 
-zenity --info --title="Update Complete" --text="✅ EtherealOS v4.6.0 Updated!\n\n🦊 Firefox is ready to use.\nJust click Firefox on your desktop!" --width=300 2>/dev/null &
+VERSION=$(cat "$REPO_DIR/version.txt" 2>/dev/null || echo "latest")
+zenity --info --title="Update Complete" --text="✅ EtherealOS v${VERSION} Updated!\n\n🦊 Firefox is ready.\n🖱️ Right-click taskbar → Task Manager" --width=300 2>/dev/null &
