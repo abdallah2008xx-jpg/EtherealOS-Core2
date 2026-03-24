@@ -14,16 +14,19 @@ window.background {
 }
 
 /* FIX: Prevent Nemo-Desktop from painting the wallpaper black */
-window.desktop,
 window.nemo-desktop,
-.nemo-desktop.nemo-canvas-item,
+window.desktop,
+.nemo-desktop,
 .nemo-desktop.view,
+.nemo-desktop .view,
+.nemo-desktop iconview,
 #NemoDesktop,
-#NemoDesktop window.background,
-#NemoDesktop .view {
-    background-color: transparent;
-    background-image: none;
-    box-shadow: none;
+#NemoDesktop .view,
+#NemoDesktop.view,
+#NemoDesktop window.background {
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
 }
 
 /* ── Header / Titlebar ── */
