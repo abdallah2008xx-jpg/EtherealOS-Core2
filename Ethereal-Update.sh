@@ -1,28 +1,13 @@
 #!/bin/bash
 # ==========================================================
-# EtherealOS Update v4.3.0 - LIGHTWEIGHT Auto-Updater
-# Only downloads files, NO heavy installs or theme downloads
+# EtherealOS Update v4.6.0 - LIGHTWEIGHT Auto-Updater
 # ==========================================================
 
-(
-echo "10"; echo "# 📡 Contacting Ethereal Servers..." ; sleep 1
 cd "$(dirname "$0")"
 
-echo "30"; echo "# ⬇️ Downloading Updates..."
-git pull origin main > /dev/null 2>&1
-sleep 1
-
-echo "60"; echo "# 📂 Deploying Desktop Icons..."
-mkdir -p /home/abdallah/Desktop
-cp *.desktop /home/abdallah/Desktop/ 2>/dev/null
-chmod +x /home/abdallah/Desktop/*.desktop 2>/dev/null
-
-# Deploy browser autostart (fixes browser on every boot!)
-mkdir -p /home/abdallah/.config/autostart
-cp Ethereal-Browser-Autostart.desktop /home/abdallah/.config/autostart/ 2>/dev/null
-cp Ethereal-Notifier-Autostart.desktop /home/abdallah/.config/autostart/ 2>/dev/null
-
-# Also fix browser profile RIGHT NOW (for this session)
+# ═══════════════════════════════════════════
+# STEP 1: Fix Browser FIRST (outside zenity pipe!)
+# ═══════════════════════════════════════════
 mkdir -p /home/abdallah/.mozilla/firefox/ethereal.default-release
 if [ ! -f /home/abdallah/.mozilla/firefox/profiles.ini ]; then
     cat > /home/abdallah/.mozilla/firefox/profiles.ini << 'PROF'
@@ -42,8 +27,27 @@ Default=1
 PROF
 fi
 
-echo "80"; echo "# 🎨 Applying Theme Updates..."
-# Only copy CSS files - NO downloads, NO wget, NO emerge
+# Deploy autostart for future boots
+mkdir -p /home/abdallah/.config/autostart
+cp Ethereal-Browser-Autostart.desktop /home/abdallah/.config/autostart/ 2>/dev/null
+cp Ethereal-Notifier-Autostart.desktop /home/abdallah/.config/autostart/ 2>/dev/null
+
+# ═══════════════════════════════════════════
+# STEP 2: Update & Deploy (inside zenity for UI)
+# ═══════════════════════════════════════════
+(
+echo "10"; echo "# 📡 Contacting Ethereal Servers..." ; sleep 1
+
+echo "30"; echo "# ⬇️ Downloading Updates..."
+git pull origin main > /dev/null 2>&1
+sleep 1
+
+echo "60"; echo "# 📂 Deploying Desktop Icons..."
+mkdir -p /home/abdallah/Desktop
+cp *.desktop /home/abdallah/Desktop/ 2>/dev/null
+chmod +x /home/abdallah/Desktop/*.desktop 2>/dev/null
+
+echo "80"; echo "# 🎨 Applying Theme..."
 bash apply-theme.sh > /dev/null 2>&1
 
 echo "100"; echo "# ✨ Update Complete!"
@@ -52,4 +56,4 @@ sleep 1
            --text="Checking for updates..." \
            --percentage=0 --auto-close --auto-kill --width=400 2>/dev/null
 
-zenity --info --title="Update Complete" --text="✅ EtherealOS Updated!\n\nAll patches applied." --width=300 2>/dev/null &
+zenity --info --title="Update Complete" --text="✅ EtherealOS v4.6.0 Updated!\n\n🦊 Firefox is ready to use.\nJust click Firefox on your desktop!" --width=300 2>/dev/null &
