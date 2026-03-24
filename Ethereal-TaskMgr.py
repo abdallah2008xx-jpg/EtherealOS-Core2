@@ -431,6 +431,10 @@ class TaskManager(Gtk.Window):
 
 if __name__ == "__main__":
     try:
+        provider = Gtk.CssProvider()
+        provider.load_from_data(CSS)
+        Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        
         win = TaskManager()
         win.connect("destroy", Gtk.main_quit)
         win.show_all()
