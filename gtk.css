@@ -394,14 +394,14 @@ menu,
 .menu,
 .context-menu,
 popover {
-    background-color: rgba(30,32,40, 0.97) !important;
-    background: rgba(30,32,40, 0.97) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    border-radius: 14px !important;
+    background-color: rgba(12, 14, 23, 0.85) !important;
+    background: rgba(12, 14, 23, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 16px !important;
     padding: 6px !important;
     margin: 8px !important; /* Forces GTK compositor to slice the shadow cleanly inside the bounds */
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8) !important;
-    color: #eeeeee !important;
+    color: #f0f0fd !important;
 }
 
 /* 3. Ensure window decorations don't paint a hard square shadow */
