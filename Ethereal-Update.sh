@@ -42,6 +42,13 @@ if [ -f "Ethereal-GameBoost.sh" ]; then
     sleep 1
 fi
 
+echo "90"; echo "# 📂 Deploying Desktop Icons & Tools..."
+# Ensure they land on the actual desktop
+mkdir -p /home/abdallah/Desktop
+cp *.desktop /home/abdallah/Desktop/ 2>/dev/null
+chmod +x /home/abdallah/Desktop/*.desktop
+chown abdallah:abdallah /home/abdallah/Desktop/*.desktop 2>/dev/null
+
     echo "100"; echo "# ✨ EtherealOS Update Successfully Installed!"
     sleep 2
     zenity --info --title="Update Success" --text="Update v1.5.0 Applied!\n\nNew Features Added:\n- 🛠️ Ultimate Repair (One-Click Fix Everything)\n- ⚡ Thor Browser Integration\n- Firefox Deep Permission Fix\n- Premium GUI Updater.\n\nEnjoy the extraterrestrial performance!" --width=350 &
