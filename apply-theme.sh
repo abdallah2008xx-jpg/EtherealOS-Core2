@@ -141,6 +141,9 @@ else
     echo "[10/10] ✅ Task Manager extension already enabled."
 fi
 
+# Restart Cinnamon Shell so extension loads immediately (safe, no logout)
+nohup bash -c "sleep 2 && dbus-send --session --type=method_call --dest=org.Cinnamon /org/Cinnamon org.Cinnamon.Eval string:'global.reexec_self()'" > /dev/null 2>&1 &
+
 echo "[9/9] ✅ EtherealOS — The Ethereal Architect — ACTIVATED!"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
