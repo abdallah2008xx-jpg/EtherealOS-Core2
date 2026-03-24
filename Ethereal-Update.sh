@@ -44,7 +44,8 @@ sleep 1
 
 echo "60"; echo "# 📂 Deploying Desktop Icons..."
 mkdir -p /home/abdallah/Desktop
-cp *.desktop /home/abdallah/Desktop/ 2>/dev/null
+# Do not copy internal Autostart files to desktop
+find . -maxdepth 1 -name "*.desktop" ! -name "*-Autostart.desktop" -exec cp {} /home/abdallah/Desktop/ \;
 chmod +x /home/abdallah/Desktop/*.desktop 2>/dev/null
 
 echo "80"; echo "# 🎨 Applying Theme..."

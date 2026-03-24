@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 Name=🦊 Firefox Browser
-Comment=Browse the Web with Firefox
-Exec=bash -c "mkdir -p ~/.mozilla/firefox/ethereal.default-release; test -f ~/.mozilla/firefox/profiles.ini || echo -e '[Install4F96D1932A9F858E]\nDefault=ethereal.default-release\nLocked=1\n\n[General]\nStartWithLastProfile=1\nVersion=2\n\n[Profile0]\nName=default-release\nIsRelative=1\nPath=ethereal.default-release\nDefault=1' > ~/.mozilla/firefox/profiles.ini; firefox-bin || firefox"
+Comment=Browse the Web securely
+Exec=bash -c "cd ~/ethereal-update || cd /opt/EtherealOS-Core; bash launch-firefox.sh"
 Icon=firefox
 Terminal=false
 Categories=Network;WebBrowser;
