@@ -4,23 +4,20 @@
 # "One Click to Fix Everything"
 # ==========================================================
 
-(
-echo "10"; echo "# 🔍 Scanning EtherealOS Core for anomalies..." ; sleep 1
-
 # Step 1: Secure Internal Root Access
-# Using built-in Ethereal Authority for seamless repair
-echo "123456" | sudo -S true 2>/dev/null
-if [ $? -ne 0 ]; then
-    zenity --error --text="Repair Engine Failure: System Authority not recognized.\n\nPlease try manual terminal repair."
-    exit 1
+# Attempting proper GUI elevation via PolicyKit
+if [ "$EUID" -ne 0 ]; then
+    pkexec bash "$0" "$@"
+    exit $?
 fi
 
+# We are now running as root!
+echo "10"; echo "# 🔍 Scanning EtherealOS Core for anomalies..." ; sleep 1
 echo "20"; echo "# 🔧 Correcting System Identity & Ownership..."
-echo "123456" | sudo -S chown -R abdallah:abdallah /home/abdallah 2>/dev/null
+chown -R abdallah:abdallah /home/abdallah 2>/dev/null
 
 echo "35"; echo "# 🦊 Reassembling Browser Engine (Firefox & Thor)..."
-# Inject root into sub-scripts
-export ROOT_PW="123456"
+# Injected root power is not needed as we are already root
 bash Ethereal-Firefox-Fix.sh > /dev/null 2>&1
 
 echo "50"; echo "# 🛠️ Rebuilding UI Layout & Panels..."
