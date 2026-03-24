@@ -44,7 +44,7 @@ fi
 
     echo "100"; echo "# ✨ EtherealOS Update Successfully Installed!"
     sleep 2
-    zenity --info --title="Update Success" --text="Update v1.4.0 Applied!\n\nNew Features Added:\n- ⚡ Thor Browser Integration\n- Firefox Deep Permission Fix\n- Premium GUI Updater\n- Ethereal Game Boost.\n\nEnjoy the extraterrestrial performance!" --width=350 &
+    zenity --info --title="Update Success" --text="Update v1.5.0 Applied!\n\nNew Features Added:\n- 🛠️ Ultimate Repair (One-Click Fix Everything)\n- ⚡ Thor Browser Integration\n- Firefox Deep Permission Fix\n- Premium GUI Updater.\n\nEnjoy the extraterrestrial performance!" --width=350 &
 ) | zenity --progress --title="🪐 EtherealOS System Update" \
            --text="Initializing Update Engine..." \
            --percentage=0 --auto-close --auto-kill --width=450

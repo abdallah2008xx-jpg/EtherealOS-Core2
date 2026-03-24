@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=🛠️ Ultimate Repair
+Comment=Fix everything in EtherealOS with one click
+Exec=bash -c "cd ~/ethereal-update && bash Ethereal-Ultimate-Repair.sh"
+Icon=system-run
+Terminal=false
+Categories=System;Settings;
+Keywords=fix;repair;error;browser;ethereal;
