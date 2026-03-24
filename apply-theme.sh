@@ -66,7 +66,8 @@ gsettings set org.cinnamon.desktop.interface gtk-theme "Adwaita-dark"
 gsettings set org.cinnamon.desktop.wm.preferences theme "Adwaita-dark"
 
 # Gracefully push desktop icons and menus to apply the new GTK CSS
-nemo-desktop -q 2>/dev/null && nohup nemo-desktop >/dev/null 2>&1 &
+# Gsettings toggle above already triggers the automatic live-reload of GTK components
+# so we DO NOT need to kill nemo-desktop (which causes the desktop icons to vanish).
 
 echo "[3/9] ✅ Dark GTK theme set & dynamically reloaded."
 
