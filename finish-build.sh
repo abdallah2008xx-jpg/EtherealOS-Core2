@@ -131,8 +131,26 @@ menuentry "🚨 EtherealOS - Emergency Shell (bash)" {
 }
 GRUBCFG
 
+SQUASH_IMG="$WORK/LiveOS/squashfs.img"
+if [ -f "$SQUASH_IMG" ]; then
+    SQUASH_SIZE=$(stat -c%s "$SQUASH_IMG" 2>/dev/null || echo 0)
+else
+    SQUASH_SIZE=0
+fi
+
+if [ "$SQUASH_SIZE" -ge 4294967295 ]; then
+    echo "🗜️ Rebuilding squashfs.img to fit under 4GB (xz compression)..."
+    rm -f "$SQUASH_IMG" 2>/dev/null || true
+    mkdir -p "$WORK/LiveOS"
+    mksquashfs / "$SQUASH_IMG" \
+      -comp xz -Xbcj x86 -b 1M -processors 2 -mem 1G \
+      -e /proc /sys /dev /mnt /tmp /var/tmp /media /run \
+         /home/abdallah/.cache /var/cache /usr/src /usr/portage /var/db/repos /var/lib/portage
+    ls -lh "$SQUASH_IMG" || true
+fi
+
 echo "💿 MINTING THE FLAWLESS ISO..."
-grub-mkrescue -o /media/sf_gentoo-files/EtherealOS-v6.0-Immortal.iso "$WORK" -V ETHEREALOS -iso-level 3 -allow-limited-size
+grub-mkrescue -o /media/sf_gentoo-files/EtherealOS-v6.0-Immortal.iso "$WORK" -V ETHEREALOS -iso-level 3
 
 echo "🏆 =========================================="
 echo "   ✅ ISO SUCCESS: EtherealOS-v6.0-Immortal.iso"
