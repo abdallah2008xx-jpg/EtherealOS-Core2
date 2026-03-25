@@ -21,6 +21,14 @@ if [ ! -d ~/.icons/capitaine-cursors ]; then
 fi
 gsettings set org.cinnamon.desktop.interface cursor-theme 'capitaine-cursors'
 
+# Ensure Cursor Consistency (Inheritance for X11/GTK apps)
+mkdir -p ~/.icons/default
+echo "[Icon Theme]
+Inherits=capitaine-cursors" > ~/.icons/default/index.theme
+# Also set for X11 specifically
+echo "Xcursor.theme: capitaine-cursors" >> ~/.Xresources
+xrdb -merge ~/.Xresources 2>/dev/null || true
+
 echo "4. Injecting EtherealOS Logo into Terminal (Neofetch)..."
 # Create a custom ascii logo for EtherealOS
 mkdir -p ~/.config/neofetch
@@ -35,7 +43,10 @@ ${c1}
     . . .    
 EOF
 
-echo "command -v neofetch >/dev/null 2>&1 && neofetch --source ~/.config/neofetch/ethereal.txt --ascii_colors 6 4" >> ~/.bashrc
+# Only add neofetch if it's not already in .bashrc
+if ! grep -q "neofetch --source ~/.config/neofetch/ethereal.txt" "$HOME/.bashrc" 2>/dev/null; then
+    echo "command -v neofetch >/dev/null 2>&1 && neofetch --source ~/.config/neofetch/ethereal.txt --ascii_colors 6 4" >> "$HOME/.bashrc"
+fi
 
 echo "5. Adding Windows+Shift+S for Snip/Area Screenshot..."
 gsettings set org.cinnamon.desktop.keybindings.media-keys area-screenshot "['<Shift><Super>s']" 2>/dev/null
@@ -142,6 +153,23 @@ if [ -f "$(dirname "$0")/dunstrc" ]; then
     cp "$(dirname "$0")/dunstrc" ~/.config/dunst/dunstrc
 fi
 
+echo "12. Enabling Eye Comfort (Night Light)..."
+# Enable Cinnamon's native Night Light with an automatic schedule
+gsettings set org.cinnamon.settings-daemon.plugins.color night-light-enabled true 2>/dev/null
+gsettings set org.cinnamon.settings-daemon.plugins.color night-light-schedule-automatic true 2>/dev/null
+
+echo "13. Deploying Automated Maintenance (Trash & Tmp Cleaning)..."
+# Create a cleanup script that removes files older than 30 days
+cat << 'EOF' | sudo tee /usr/local/bin/ethereal-cleanup.sh > /dev/null
+#!/bin/bash
+# EtherealOS Maintenance - Clean Trash and Tmp (>30 days)
+find ~/.local/share/Trash/files/* -mtime +30 -exec rm -rf {} + 2>/dev/null
+sudo find /tmp -type f -atime +30 -delete 2>/dev/null
+EOF
+sudo chmod +x /usr/local/bin/ethereal-cleanup.sh
+# Add to crontab (Weekly at midnight on Sunday)
+(crontab -l 2>/dev/null; echo "0 0 * * 0 /usr/local/bin/ethereal-cleanup.sh") | crontab - 2>/dev/null || true
+
 echo "11. Installing Office & PDF Suite (BTEC Ready)..."
 # A. Okular (Premium PDF with Signing/Annotations)
 if ! command -v okular >/dev/null 2>&1; then
@@ -166,6 +194,16 @@ if command -v swapspace >/dev/null 2>&1; then
     sudo mkdir -p /var/lib/swapspace
     sudo rc-update add swapspace default 2>/dev/null || true
     sudo rc-service swapspace start 2>/dev/null || true
+fi
+
+echo "14. Optimizing System Core (Pro Gaming Kernel)..."
+# Add XanMod/Liquorix logic (using Gentoo overlays or binary sources)
+if ! uname -r | grep -qiE "xanmod|liquorix"; then
+    echo "   → Note: High-Performance Kernel (XanMod/Liquorix) is recommended."
+    echo "   → Instructions added to Ethereal-ToolKit.sh for kernel switching."
+    # We add the command to the Toolkit for the user to trigger when ready
+    echo "   # To upgrade to XanMod (Optimized for Gaming):" >> Ethereal-ToolKit.sh
+    echo "   # sudo emerge --ask sys-kernel/xanmod-kernel-bin" >> Ethereal-ToolKit.sh
 fi
 
 echo "EtherealOS Final Polish Complete!"

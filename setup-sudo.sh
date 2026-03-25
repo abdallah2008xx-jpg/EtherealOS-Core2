@@ -148,6 +148,10 @@ fi
 # ── Step 7: Configure MIME associations for images ──
 echo ""
 echo "[7/7] 🖼️  Setting up image file associations..."
+
+# Identify target user
+TARGET_USER="${SUDO_USER:-abdallah}"
+
 if command -v feh >/dev/null 2>&1; then
   # Create feh.desktop if missing
   if [ ! -f /usr/share/applications/feh.desktop ]; then
@@ -165,21 +169,26 @@ DESKTOP
   fi
 
   # Set as default for common image types
-  su - abdallah -c "
-    xdg-mime default feh.desktop image/jpeg 2>/dev/null
-    xdg-mime default feh.desktop image/png 2>/dev/null
-    xdg-mime default feh.desktop image/gif 2>/dev/null
-    xdg-mime default feh.desktop image/webp 2>/dev/null
-    xdg-mime default feh.desktop image/bmp 2>/dev/null
-    xdg-mime default feh.desktop image/svg+xml 2>/dev/null
-  " 2>/dev/null
-  echo "  ✅ feh set as default image viewer."
+  # We use pkexec or direct su if DBUS is handled, but simple su - target_user is often enough for xdg-mime
+  if id "$TARGET_USER" >/dev/null 2>&1; then
+    su - "$TARGET_USER" -c "
+      xdg-mime default feh.desktop image/jpeg 2>/dev/null
+      xdg-mime default feh.desktop image/png 2>/dev/null
+      xdg-mime default feh.desktop image/gif 2>/dev/null
+      xdg-mime default feh.desktop image/webp 2>/dev/null
+      xdg-mime default feh.desktop image/bmp 2>/dev/null
+      xdg-mime default feh.desktop image/svg+xml 2>/dev/null
+    " 2>/dev/null
+    echo "  ✅ feh set as default image viewer for $TARGET_USER."
+  fi
 elif command -v eog >/dev/null 2>&1; then
-  su - abdallah -c "
-    xdg-mime default org.gnome.eog.desktop image/jpeg 2>/dev/null
-    xdg-mime default org.gnome.eog.desktop image/png 2>/dev/null
-  " 2>/dev/null
-  echo "  ✅ Eye of GNOME set as default image viewer."
+  if id "$TARGET_USER" >/dev/null 2>&1; then
+    su - "$TARGET_USER" -c "
+      xdg-mime default org.gnome.eog.desktop image/jpeg 2>/dev/null
+      xdg-mime default org.gnome.eog.desktop image/png 2>/dev/null
+    " 2>/dev/null
+    echo "  ✅ Eye of GNOME set as default image viewer for $TARGET_USER."
+  fi
 fi
 
 # ── Step 8: Configure Timeshift for Auto-Snapshots ──

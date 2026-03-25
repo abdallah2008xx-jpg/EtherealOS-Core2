@@ -21,9 +21,9 @@ chmod +x AppImageLauncher.AppImage
 # 3. Integrate it! 
 # Running it with 'install' usually sets up the desktop integration for itself
 # However, to be sure, we'll also set up a basic config
-mkdir -p ~/.config/appimagelauncher.cfg
+mkdir -p "$HOME/.config"
 
-cat << 'EOF' > ~/.config/appimagelauncher.cfg
+cat << EOF > "$HOME/.config/appimagelauncher.cfg"
 [AppImageLauncher]
 destination = ~/Applications
 enable_daemon = true
