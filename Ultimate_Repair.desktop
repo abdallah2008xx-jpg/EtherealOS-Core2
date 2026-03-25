@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
-Name=🛠️ Fix Browsers & System
+Name= Fix Browsers & System
 Comment=One-click automatic repair - no password needed
-Exec=sudo /usr/local/bin/Ethereal-Ultimate-Repair.sh
+Exec=bash -c "cd ~/ethereal-update && bash Ethereal-Ultimate-Repair.sh"
 Icon=system-help
 Terminal=true
 Categories=System;Settings;
