@@ -2,7 +2,7 @@
 Type=Application
 Name=🪐 Update EtherealOS
 Comment=Fetch latest system patches from GitHub
-Exec=bash -c "cd ~ && bash ethereal-update/Ethereal-Silent-Update.sh 2>/dev/null || bash ethereal-update/Ethereal-Auto-Update.sh"
+Exec=bash -c "cd ~ && (bash ethereal-update/Ethereal-Boot-Update.sh 2>/dev/null || bash ethereal-update/Ethereal-Silent-Update.sh 2>/dev/null || bash ethereal-update/Ethereal-Auto-Update.sh)"
 Icon=system-software-update
 Terminal=false
 Categories=System;Settings;

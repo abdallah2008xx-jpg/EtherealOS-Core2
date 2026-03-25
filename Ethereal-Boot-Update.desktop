@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=EtherealOS Auto-Update
+Comment=Auto-update system at boot
+Exec=bash -c "sleep 10 && cd ~ && bash ethereal-update/Ethereal-Boot-Update.sh 2>/dev/null || bash ethereal-update/Ethereal-Silent-Update.sh 2>/dev/null || bash ethereal-update/Ethereal-Auto-Update.sh"
+Icon=system-software-update
+Terminal=false
+X-GNOME-Autostart-enabled=true
+Hidden=false
+NoDisplay=false
