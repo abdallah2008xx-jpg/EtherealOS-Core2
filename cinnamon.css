@@ -60,14 +60,14 @@ stage {
 .panel-top {
   background-color: rgba(255, 255, 255, 0.10);
   border: 1px solid rgba(255, 255, 255, 0.20);
-  border-radius: 32px;
+  border-radius: 0 0 32px 32px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  margin: 12px 24px 0 24px;
+  margin: 0 12px 4px 12px;
 }
 
 .panel-bottom {
   background-color: transparent;
-  margin: 0 0 12px 0;
+  margin: 4px 0 0 0;
   box-shadow: none;
   border: none;
 }
@@ -93,7 +93,7 @@ stage {
   border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 24px;
   box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
-  margin: 12px 0 12px 12px;
+  margin: 8px 0 8px 4px;
 }
 
 /* Right panel */
@@ -103,7 +103,7 @@ stage {
   border-radius: 24px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
   width: 52px;
-  margin: 8px 8px 8px 0;
+  margin: 8px 4px 8px 0;
 }
 
 
