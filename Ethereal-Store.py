@@ -71,7 +71,7 @@ list row.app-row:hover {
 
 .app-card { padding: 20px 25px; }
 .app-name { color: #f7fafc; font-size: 22px; font-weight: 800; }
-.app-desc { color: #718096; font-size: 14px; margin-top: 4px; line-height: 1.4; }
+.app-desc { color: #718096; font-size: 14px; margin-top: 4px; }
 .app-meta { color: #4a5568; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-top: 8px; }
 
 .install-btn {
