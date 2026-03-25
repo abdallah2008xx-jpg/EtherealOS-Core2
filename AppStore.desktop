@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name= App Store
 Comment=Install apps with one click
-Exec=python3 /home/abdallah/EtherealOS-Repo/Ethereal-Store.py
+Exec=python3 /usr/local/bin/Ethereal-Store.py
 Icon=org.gnome.Software
 Terminal=false
 Type=Application

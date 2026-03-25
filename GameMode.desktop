@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=🚀 Ethereal Game Boost
 Comment=EtherealOS Hyper-Threading Performance Engine
-Exec=python3 /home/abdallah/EtherealOS-Repo/Ethereal-GameMode.py
+Exec=python3 /usr/local/bin/Ethereal-GameMode.py
 Icon=input-gaming
 Terminal=false
 Type=Application

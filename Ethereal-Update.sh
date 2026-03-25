@@ -81,6 +81,13 @@ if command -v snap >/dev/null 2>&1; then
     true
 fi
 
+echo "45"; echo "# 🔧 Installing System Scripts to /usr/local/bin..."
+# Install all Ethereal scripts to a global location for path consistency
+sudo cp "$REPO_DIR"/Ethereal-*.sh /usr/local/bin/ 2>/dev/null
+sudo cp "$REPO_DIR"/*.py /usr/local/bin/ 2>/dev/null
+sudo chmod +x /usr/local/bin/Ethereal-* 2>/dev/null
+sudo chmod +x /usr/local/bin/*.py 2>/dev/null
+
 echo "45"; echo "# 🧹 Cleaning old Ethereal launchers..."
 # Remove only Ethereal-specific icons to be less aggressive
 # find "$HOME/Desktop" -name "*.desktop" -exec grep -q "Ethereal" {} \; -delete 2>/dev/null
@@ -101,7 +108,12 @@ chmod +x "$HOME/Desktop"/*.desktop 2>/dev/null
 # Mark desktop files as trusted (Cinnamon/Nemo requirement)
 echo "58"; echo "# 🔐 Marking launchers as trusted..."
 for file in "$HOME/Desktop"/*.desktop; do
-    [ -f "$file" ] && gio set "$file" metadata::trusted true 2>/dev/null || true
+    if [ -f "$file" ]; then
+        # Use both gio and the trusted metadata to ensure Cinnamon accepts it
+        gio set "$file" metadata::trusted true 2>/dev/null || true
+        # Ensure the file is executable by the user
+        chmod +x "$file" 2>/dev/null || true
+    fi
 done
 
 # Update icons
