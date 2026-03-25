@@ -66,21 +66,23 @@ progressbar progress { background-color: #00ff88; border-radius: 10px; box-shado
 """
 
 APPS = [
-    {"id": "discord", "name": "Discord", "cat": "Internet", "desc": "Chat for Communities and Friends", "repo": "srevinsaju/Discord-AppImage", "icon": "discord"},
+    {"id": "discord", "name": "Discord", "cat": "Internet", "desc": "Chat for Communities and Friends", "repo": "portapps/discord-portable", "icon": "discord"},
     {"id": "spotify", "name": "Spotify", "cat": "Media", "desc": "Music Player and Podcasts", "repo": "srevinsaju/Spotify-AppImage", "icon": "spotify"},
     {"id": "heroic", "name": "Heroic Games", "cat": "Games", "desc": "Epic, GOG & Amazon Games Launcher", "repo": "Heroic-Games-Launcher/HeroicGamesLauncher", "icon": "applications-games"},
     {"id": "freetube", "name": "FreeTube", "cat": "Media", "desc": "Private YouTube Client (No Ads)", "repo": "FreeTubeApp/FreeTube", "icon": "youtube"},
     {"id": "upscayl", "name": "Upscayl", "cat": "Media", "desc": "Free AI Image Upscaler", "repo": "upscayl/upscayl", "icon": "image-viewer"},
     {"id": "localsend", "name": "LocalSend", "cat": "Internet", "desc": "AirDrop for Linux (Share Files)", "repo": "localsend/localsend", "icon": "folder-share"},
-    {"id": "rpcs3", "name": "RPCS3 Emulator", "cat": "Games", "desc": "PlayStation 3 Emulator", "repo": "RPCS3/rpcs3-binaries-linux", "icon": "wine"},
     {"id": "audacity", "name": "Audacity", "cat": "Media", "desc": "Professional Audio Editor", "repo": "audacity/audacity", "icon": "audacity"},
-    {"id": "floorp", "name": "FloorP Browser", "cat": "Internet", "desc": "Most Private Firefox Fork", "repo": "Floorp-Projects/Floorp", "icon": "floorp"},
     {"id": "vscodium", "name": "VSCodium", "cat": "Productivity", "desc": "Free Open Source VS Code", "repo": "VSCodium/vscodium", "icon": "vscodium"},
     {"id": "bitwarden", "name": "Bitwarden", "cat": "Internet", "desc": "Secure Password Manager", "repo": "bitwarden/clients", "icon": "bitwarden"},
     {"id": "obsidian", "name": "Obsidian", "cat": "Productivity", "desc": "Personal Knowledge Base", "repo": "obsidianmd/obsidian-releases", "icon": "obsidian"},
     {"id": "kdenlive", "name": "Kdenlive", "cat": "Media", "desc": "Pro Video Editor", "repo": "KDE/kdenlive", "icon": "kdenlive"},
     {"id": "anydesk", "name": "AnyDesk", "cat": "Internet", "desc": "Remote Desktop Software", "repo": "srevinsaju/anydesk-appimage", "icon": "anydesk"},
-    {"id": "postman", "name": "Postman", "cat": "Productivity", "desc": "API Platform Toolkit", "repo": "srevinsaju/Postman-AppImage", "icon": "postman"}
+    {"id": "postman", "name": "Postman", "cat": "Productivity", "desc": "API Platform Toolkit", "repo": "srevinsaju/Postman-AppImage", "icon": "postman"},
+    {"id": "firefox", "name": "Firefox", "cat": "Internet", "desc": "Fast & Private Browser", "repo": "srevinsaju/Firefox-AppImage", "icon": "firefox"},
+    {"id": "thunderbird", "name": "Thunderbird", "cat": "Internet", "desc": "Email Client", "repo": "srevinsaju/Thunderbird-AppImage", "icon": "thunderbird"},
+    {"id": "gimp", "name": "GIMP", "cat": "Media", "desc": "Image Editor", "repo": "srevinsaju/gimp-appimage", "icon": "gimp"},
+    {"id": "libreoffice", "name": "LibreOffice", "cat": "Productivity", "desc": "Office Suite", "repo": "srevinsaju/LibreOffice-AppImage", "icon": "libreoffice"}
 ]
 
 class AppStore(Gtk.Window):
@@ -205,49 +207,92 @@ class AppStore(Gtk.Window):
 
     def download_app(self, app):
         try:
-            # 1. Fetch latest release page to get redirected to the actual Tag URL (Bypassing API limits!)
-            latest_url = f"https://github.com/{app['repo']}/releases/latest"
-            req = urllib.request.Request(latest_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
-            resp = urllib.request.urlopen(req)
-            tag = resp.url.split('/')[-1]
+            # 1. Fetch latest release info using GitHub API with fallback
+            api_url = f"https://api.github.com/repos/{app['repo']}/releases/latest"
+            headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64)', 'Accept': 'application/vnd.github.v3+json'}
             
-            # 2. Fetch the expanded assets HTML
-            assets_url = f"https://github.com/{app['repo']}/releases/expanded_assets/{tag}"
-            req2 = urllib.request.Request(assets_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
-            html = urllib.request.urlopen(req2).read().decode('utf-8')
+            try:
+                req = urllib.request.Request(api_url, headers=headers)
+                resp = urllib.request.urlopen(req, timeout=15)
+                import json
+                release_data = json.loads(resp.read().decode('utf-8'))
+                assets = release_data.get('assets', [])
+            except:
+                # Fallback: parse HTML page
+                latest_url = f"https://github.com/{app['repo']}/releases/latest"
+                req = urllib.request.Request(latest_url, headers={'User-Agent': 'Mozilla/5.0'})
+                resp = urllib.request.urlopen(req, timeout=15)
+                html = resp.read().decode('utf-8')
+                assets = []
+                for chunk in html.split('href="')[1:]:
+                    if '.AppImage' in chunk and '/releases/download/' in chunk:
+                        url = chunk.split('"')[0]
+                        if not url.startswith('http'):
+                            url = 'https://github.com' + url
+                        assets.append({'browser_download_url': url, 'name': url.split('/')[-1]})
             
+            # Find the best AppImage (prefer x86_64, avoid arm)
             dl_url = None
-            for chunk in html.split('"'):
-                if chunk.endswith('.AppImage') and '/releases/download/' in chunk:
-                    dl_url = "https://github.com" + chunk
+            filename = None
+            for asset in assets:
+                url = asset.get('browser_download_url', '')
+                name = asset.get('name', '')
+                if url and name.endswith('.AppImage'):
+                    # Skip ARM versions
+                    if 'arm' in name.lower() or 'aarch' in name.lower():
+                        continue
+                    dl_url = url
+                    filename = name
                     break
-                    
+            
             if not dl_url:
-                GLib.idle_add(self.fail, app, "App Download Missing (404)")
+                GLib.idle_add(self.fail, app, "No compatible AppImage found")
                 return
                 
-            filename = dl_url.split('/')[-1]
             out_path = os.path.join(self.app_dir, filename)
             
             GLib.idle_add(app["btn"].set_label, "DOWNLOADING...")
             
+            # Download with progress
             def report(count, block, total):
-                pct = min(1.0, count * block / total) if total > 0 else 0
-                GLib.idle_add(app["pbar"].set_fraction, pct)
+                if total > 0:
+                    pct = min(1.0, count * block / total)
+                    GLib.idle_add(app["pbar"].set_fraction, pct)
                 
             urllib.request.urlretrieve(dl_url, out_path, reporthook=report)
             os.chmod(out_path, 0o755)
             
-            # Desktop File Magic with icon
+            # Create desktop file with proper icon
             icon_name = app.get("icon", "application-x-executable")
-            d_cont = f"[Desktop Entry]\nName={app['name']}\nComment={app['desc']}\nExec=\"{out_path}\"\nIcon={icon_name}\nTerminal=false\nType=Application\nCategories={app['cat']};Utility;\n"
+            desktop_content = f"""[Desktop Entry]
+Name={app['name']}
+Comment={app['desc']}
+Exec={out_path}
+Icon={icon_name}
+Terminal=false
+Type=Application
+Categories={app['cat']};
+StartupNotify=true
+"""
             dfile = os.path.join(self.shortcut_dir, f"ethereal_{app['id']}.desktop")
-            with open(dfile, 'w') as f: f.write(d_cont)
+            with open(dfile, 'w') as f:
+                f.write(desktop_content)
             os.chmod(dfile, 0o755)
             
+            # Mark desktop file as trusted (Cinnamon/GNOME)
+            os.system(f'gio set "{dfile}" metadata::trusted true 2>/dev/null || true')
+            
+            # Update icon cache
+            os.system('gtk-update-icon-cache -f ~/.local/share/icons/ 2>/dev/null || true')
+            
             GLib.idle_add(self.succ, app)
+            
         except Exception as e:
-            GLib.idle_add(self.fail, app, str(e))
+            import traceback
+            error_msg = str(e)
+            print(f"[{app['name']}] Install Failed:", error_msg)
+            print(traceback.format_exc())
+            GLib.idle_add(self.fail, app, error_msg)
 
     def succ(self, app):
         app["pbar"].set_visible(False)
