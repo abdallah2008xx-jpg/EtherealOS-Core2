@@ -4,6 +4,6 @@ Type=Application
 Name=🖥️ Hardware Manager
 Comment=Manage EtherealOS Hardware Drivers
 Exec=/home/abdallah/.local/bin/Ethereal-Hardware-Manager.sh
-Icon=utilities-system-monitor
+Icon=utilities-tweaks
 Terminal=false
 Categories=System;Settings;HardwareSettings;
