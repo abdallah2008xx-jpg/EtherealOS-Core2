@@ -1,511 +1,65 @@
 /* ==========================================================
- * EtherealOS — "The Ethereal Architect" GTK3 Premium Theme v2.0
- * 
- * Makes System Settings, Nemo, and all GTK apps look
- * like a premium glassmorphic operating system.
+ * Ethereal Architect OS - Global GTK3 Glass Theme
+ * Makes System Settings, Nemo, and other apps beautifully translucent.
  * ========================================================== */
 
-/* ── Safely Targeted Glass Window Backgrounds ── */
-/* Target Nemo File Manager and System Settings */
-.cs-main-window,
-.nemo-window,
-window.cs-main-window,
-window.nemo-window {
-    background-color: rgba(10, 12, 20, 0.92);
+/* Main application backgrounds */
+window, 
+window.background, 
+.view, 
+.rubberband,
+headerbar, 
+.titlebar, 
+.cs-header {
+    background-color: rgba(12, 14, 23, 0.65);
     background-image: none;
-    color: #e8e8f8;
-}
-
-/* FIX: Ensure Nemo-Desktop does not inherit the dark glass and does not CRASH! */
-.nemo-desktop.nemo-window,
-window.nemo-desktop,
-#NemoDesktop {
-    background-color: transparent;
-    background-image: none;
-}
-
-/* ── Header / Titlebar ── */
-headerbar,
-.titlebar {
-    background-color: rgba(15, 17, 28, 0.95);
-    background-image: none;
-    border-bottom: 1px solid rgba(126, 215, 255, 0.12);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-    padding: 6px 12px;
     color: #f0f0fd;
-    min-height: 38px;
 }
 
-headerbar .title,
-.titlebar .title {
-    font-weight: 600;
-    font-size: 11pt;
-    color: #ffffff;
+/* Sidebar in System Settings and File Manager */
+.sidebar,
+.sidebar view,
+.sidebar list {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-headerbar button,
-.titlebar button {
-    background-color: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    color: rgba(255, 255, 255, 0.75);
-    padding: 4px 10px;
-    min-height: 24px;
-    transition: all 200ms ease;
-}
-
-headerbar button:hover,
-.titlebar button:hover {
-    background-color: rgba(126, 215, 255, 0.15);
-    border-color: rgba(126, 215, 255, 0.30);
-    color: #ffffff;
-}
-
-/* Window close/min/max buttons */
-headerbar button.close,
-headerbar button.minimize,
-headerbar button.maximize {
-    border-radius: 50%;
-    min-width: 16px;
-    min-height: 16px;
-    padding: 2px;
-}
-
-headerbar button.close:hover {
-    background-color: rgba(255, 80, 80, 0.80);
-}
-
-/* ── Main Content Area ── */
-.cs-main-window .view,
-.cs-main-window .cs-header,
-.cs-main-window scrolledwindow,
-.cs-main-window scrolledwindow viewport,
-.nemo-window .view,
-.nemo-window scrolledwindow,
-.nemo-window scrolledwindow viewport {
-    background-color: rgba(12, 14, 23, 0.85);
-    background-image: none;
-    color: #e8e8f8;
-}
-
+/* Cinnamon Settings specific styles */
 #cs-main-window {
-    background-color: rgba(10, 12, 20, 0.92);
+    background-color: rgba(12, 14, 23, 0.65);
 }
 
 #cs-main-window scrolledwindow {
     background-color: transparent;
 }
 
-/* ── Sidebar ── */
-.sidebar,
-.sidebar view,
-.sidebar list,
-.sidebar row {
-    background-color: rgba(8, 10, 18, 0.60);
-    color: #c8c8d8;
-}
-
-.sidebar row:hover {
-    background-color: rgba(126, 215, 255, 0.10);
-    color: #ffffff;
-}
-
-.sidebar row:selected,
-.sidebar row:active {
-    background: linear-gradient(90deg, rgba(126, 215, 255, 0.18), transparent);
-    color: #7ed7ff;
-    border-left: 3px solid #7ed7ff;
-}
-
-/* ── Buttons ── */
-button {
-    background-color: rgba(255, 255, 255, 0.06);
-    background-image: none;
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    border-radius: 10px;
-    color: rgba(255, 255, 255, 0.80);
-    padding: 6px 14px;
-    min-height: 28px;
-    transition: all 200ms ease;
+/* Titlebars (like Mac) */
+headerbar, .titlebar {
+    border-bottom: 1px solid rgba(126, 215, 255, 0.3);
     box-shadow: none;
+    padding: 8px;
+}
+
+/* Buttons and Inputs */
+button, entry, combobox {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #ffffff;
 }
 
 button:hover {
-    background-color: rgba(126, 215, 255, 0.15);
-    border-color: rgba(126, 215, 255, 0.30);
-    color: #ffffff;
-    box-shadow: 0 0 12px rgba(126, 215, 255, 0.08);
+    background-color: rgba(126, 215, 255, 0.3);
+    border-color: rgba(126, 215, 255, 0.6);
 }
 
-button:active,
-button:checked {
-    background-color: rgba(126, 215, 255, 0.22);
-    border-color: rgba(126, 215, 255, 0.40);
-    color: #7ed7ff;
-}
-
-button.suggested-action {
-    background: linear-gradient(135deg, rgba(126, 215, 255, 0.30), rgba(163, 178, 250, 0.25));
-    border-color: rgba(126, 215, 255, 0.40);
-    color: #ffffff;
-    font-weight: 600;
-}
-
-button.suggested-action:hover {
-    background: linear-gradient(135deg, rgba(126, 215, 255, 0.40), rgba(163, 178, 250, 0.35));
-    box-shadow: 0 0 18px rgba(126, 215, 255, 0.15);
-}
-
-button.destructive-action {
-    background-color: rgba(255, 100, 100, 0.25);
-    border-color: rgba(255, 100, 100, 0.35);
-    color: #ff8080;
-}
-
-/* ── Text Inputs ── */
-entry,
-textview,
-spinbutton {
-    background-color: rgba(255, 255, 255, 0.05);
-    background-image: none;
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    border-radius: 10px;
-    color: #f0f0fd;
-    padding: 6px 12px;
-    min-height: 28px;
-    caret-color: #7ed7ff;
-    transition: all 200ms ease;
-}
-
-entry:focus,
-textview:focus,
-spinbutton:focus {
-    border-color: rgba(126, 215, 255, 0.50);
-    box-shadow: 0 0 14px rgba(126, 215, 255, 0.10);
-    background-color: rgba(255, 255, 255, 0.07);
-}
-
-/* Search entry */
-entry.search {
-    border-radius: 20px;
-    padding: 8px 16px;
-}
-
-/* ── Comboboxes ── */
-combobox button {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    border-radius: 10px;
-}
-
-/* ── Lists and Rows ── */
-list,
-listview {
-    background-color: transparent;
-}
-
-row {
-    border-radius: 10px;
-    padding: 2px 4px;
-    transition: all 150ms ease;
-}
-
+/* Lists and icons */
 row:hover {
-    background-color: rgba(126, 215, 255, 0.08);
-}
-
-row:selected,
-row:active {
-    background: linear-gradient(135deg, rgba(126, 215, 255, 0.15), rgba(163, 178, 250, 0.10));
-    color: #7ed7ff;
-}
-
-/* ── Icon View (System Settings Grid) ── */
-iconview {
-    background-color: transparent;
-}
-
-iconview:hover {
-    background-color: rgba(126, 215, 255, 0.08);
-    border-radius: 14px;
-}
-
-iconview:selected {
-    background: linear-gradient(135deg, rgba(126, 215, 255, 0.18), rgba(163, 178, 250, 0.12));
-    border-radius: 14px;
-    box-shadow: 0 0 15px rgba(126, 215, 255, 0.06);
-}
-
-/* ── Text & Labels ── */
-label {
-    color: #e0e0f0;
-}
-
-label.dim-label {
-    color: rgba(255, 255, 255, 0.45);
-}
-
-label.title {
-    font-weight: 700;
-    font-size: 12pt;
-}
-
-/* Category headers in Settings */
-.category-header,
-.cs-header {
-    color: #7ed7ff;
-    font-weight: 700;
-    font-size: 11pt;
-}
-
-/* ── Scrollbars ── */
-scrollbar {
-    background-color: transparent;
-}
-
-scrollbar slider {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 100px;
-    min-width: 6px;
-    min-height: 6px;
-    border: 2px solid transparent;
-    transition: all 200ms ease;
-}
-
-scrollbar slider:hover {
-    background-color: rgba(126, 215, 255, 0.35);
-    min-width: 8px;
-}
-
-scrollbar slider:active {
-    background-color: rgba(126, 215, 255, 0.50);
-}
-
-/* ── Switches / Toggles ── */
-switch {
-    background-color: rgba(255, 255, 255, 0.10);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 14px;
-    min-width: 48px;
-    min-height: 24px;
-    transition: all 200ms ease;
-}
-
-switch:checked {
-    background: linear-gradient(135deg, rgba(126, 215, 255, 0.45), rgba(163, 178, 250, 0.35));
-    border-color: rgba(126, 215, 255, 0.50);
-}
-
-switch slider {
-    background-color: #ffffff;
-    border-radius: 50%;
-    min-width: 20px;
-    min-height: 20px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.30);
-}
-
-/* ── Scales (Sliders) ── */
-scale trough {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-radius: 100px;
-    min-height: 6px;
-}
-
-scale highlight {
-    background: linear-gradient(90deg, #7ed7ff, #a3b2fa);
-    border-radius: 100px;
-    min-height: 6px;
-}
-
-scale slider {
-    background-color: #ffffff;
-    border-radius: 50%;
-    min-width: 18px;
-    min-height: 18px;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
-    border: none;
-}
-
-scale slider:hover {
-    box-shadow: 0 0 10px rgba(126, 215, 255, 0.30), 0 1px 6px rgba(0, 0, 0, 0.25);
-}
-
-/* ── Check & Radio Buttons ── */
-checkbutton check,
-radiobutton radio {
-    background-color: rgba(255, 255, 255, 0.06);
-    border: 2px solid rgba(255, 255, 255, 0.20);
-    min-width: 18px;
-    min-height: 18px;
-    transition: all 200ms ease;
-}
-
-checkbutton check {
-    border-radius: 5px;
-}
-
-radiobutton radio {
-    border-radius: 50%;
-}
-
-checkbutton check:checked,
-radiobutton radio:checked {
-    background: linear-gradient(135deg, #7ed7ff, #a3b2fa);
-    border-color: transparent;
-}
-
-/* ── Separators ── */
-separator {
-    background: linear-gradient(90deg, transparent, rgba(126, 215, 255, 0.12), transparent);
-    min-height: 1px;
-    min-width: 1px;
-}
-
-/* ── Tooltips ── */
-tooltip,
-tooltip.background {
-    background-color: rgba(10, 12, 20, 0.95);
-    border: 1px solid rgba(126, 215, 255, 0.15);
-    border-radius: 10px;
-    padding: 6px 12px;
-    color: #f0f0fd;
-}
-
-/* ── Context Menus (Windows 11 Style - GTK Compositor specific) ── */
-/* 1. Fully strip external square window wrappers drawn by Adwaita */
-window.popup,
-.popup,
-.csd.popup,
-.solid-csd.popup,
-window.popup.menu {
-    background-color: transparent !important;
-    background: transparent !important;
-    background-image: none !important;
-    box-shadow: none !important;
-    border: none !important;
-    border-radius: 0px !important;
-}
-
-/* 2. Style the actual menu block with rounded corners and shadows */
-window.popup menu,
-.csd.popup menu,
-.solid-csd.popup menu,
-menu,
-.menu,
-.context-menu,
-popover {
-    background-color: rgba(12, 14, 23, 0.85) !important;
-    background: rgba(12, 14, 23, 0.85) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-radius: 16px !important;
-    padding: 6px !important;
-    margin: 8px !important; /* Forces GTK compositor to slice the shadow cleanly inside the bounds */
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8) !important;
-    color: #f0f0fd !important;
-}
-
-/* 3. Ensure window decorations don't paint a hard square shadow */
-decoration,
-window.popup decoration,
-.popup decoration,
-.csd.popup decoration,
-.solid-csd.popup decoration {
-    box-shadow: 0 8px 30px rgba(0,0,0,0.8) !important;
-    background-color: transparent !important;
-    border-radius: 14px !important;
-    margin: 8px !important;
-    border: none !important;
-}
-
-/* 4. Style menu items with hover states */
-menu menuitem,
-.menu menuitem,
-popover modelbutton {
-    border-radius: 8px !important;
-    padding: 6px 14px !important;
-    margin: 2px 4px !important;
-    min-height: 26px !important;
-    color: #dddddd !important;
-    transition: all 150ms ease !important;
-    background-color: transparent !important;
-    background: transparent !important;
-}
-
-menu menuitem:hover,
-.menu menuitem:hover,
-popover modelbutton:hover {
-    background-color: rgba(255, 255, 255, 0.12) !important;
-    color: #ffffff !important;
-}
-
-menu separator,
-.menu separator,
-popover separator {
-    margin: 6px 12px !important;
-    background-color: rgba(255, 255, 255, 0.08) !important;
-    border: none !important;
-}
-
-/* ── Notebooks / Tabs ── */
-notebook header tab {
-    background-color: rgba(255, 255, 255, 0.04);
-    border: 1px solid transparent;
-    border-radius: 10px 10px 0 0;
-    padding: 6px 16px;
-    color: rgba(255, 255, 255, 0.55);
-    transition: all 200ms ease;
-}
-
-notebook header tab:checked {
-    background-color: rgba(126, 215, 255, 0.12);
-    border-bottom-color: #7ed7ff;
-    color: #7ed7ff;
-    font-weight: 600;
-}
-
-notebook header tab:hover:not(:checked) {
-    background-color: rgba(255, 255, 255, 0.06);
-    color: #ffffff;
-}
-
-notebook stack {
-    background-color: transparent;
-}
-
-/* ── Progress Bars ── */
-progressbar trough {
-    background-color: rgba(255, 255, 255, 0.06);
-    border-radius: 100px;
-    min-height: 6px;
-}
-
-progressbar progress {
-    background: linear-gradient(90deg, #7ed7ff, #a3b2fa, #e6a7ff);
-    border-radius: 100px;
-    min-height: 6px;
-    box-shadow: 0 0 10px rgba(126, 215, 255, 0.25);
-}
-
-/* ── Infobar ── */
-infobar {
-    background-color: rgba(126, 215, 255, 0.10);
-    border: 1px solid rgba(126, 215, 255, 0.20);
-    border-radius: 12px;
-}
-
-/* ── Textview (inside notepad-like areas) ── */
-textview text {
-    background-color: rgba(10, 12, 20, 0.70);
-    color: #e8e8f8;
-}
-
-/* ── Remove any leftover white/grey backgrounds ── */
-.rubberband {
     background-color: rgba(126, 215, 255, 0.15);
-    border: 1px solid rgba(126, 215, 255, 0.30);
 }
 
-selection {
-    background-color: rgba(126, 215, 255, 0.30);
+/* Remove solid white/gray hardcoded backgrounds */
+textview text, iconview, listview {
+    background-color: rgba(12, 14, 23, 0.5);
     color: #ffffff;
 }

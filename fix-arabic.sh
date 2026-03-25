@@ -1,72 +1,39 @@
 #!/bin/bash
-# Fix Arabic fonts - use Modern Premium fonts (Cairo & Tajawal) + MS Fonts
-# ==========================================================
+# Fix Arabic fonts - use clean simple Noto Sans Arabic instead of decorative fonts
 
-echo "=== ✍️ Enhancing System Fonts (Arabic & English) ==="
+echo "=== Fixing Arabic Fonts ==="
 
-# 1. Install Microsoft Core Fonts (Arial, Times New Roman, etc.)
-echo "📦 Installing Microsoft Compatibility Fonts..."
-emerge --ask=n --quiet media-fonts/corefonts 2>/dev/null || true
+# 1. Remove decorative/calligraphic Arabic fonts
+emerge --unmerge -q media-fonts/kacst-fonts 2>/dev/null
 
-# 2. Remove old decorative/calligraphic Arabic fonts
-echo "🧹 Removing legacy decorative fonts..."
-emerge --unmerge -q media-fonts/kacst-fonts 2>/dev/null || true
-
-# 3. Download Modern Premium Arabic Fonts (Cairo & Tajawal)
-echo "📥 Downloading Cairo & Tajawal Fonts..."
-mkdir -p /usr/share/fonts/google-fonts
-FONT_DIR="/usr/share/fonts/google-fonts"
-
-# Function to download and extract fonts
-install_font() {
-    local family=$1
-    local url="https://fonts.google.com/download?family=${family}"
-    wget -qO "/tmp/${family}.zip" "$url"
-    unzip -q -o "/tmp/${family}.zip" -d "${FONT_DIR}/${family}"
-    rm "/tmp/${family}.zip"
-}
-
-if [ ! -d "${FONT_DIR}/Cairo" ]; then
-    install_font "Cairo"
-fi
-if [ ! -d "${FONT_DIR}/Tajawal" ]; then
-    install_font "Tajawal"
-fi
-
-# 4. Create fontconfig to force Modern Arabic fonts
-echo "⚙️ Configuring Font Priorities..."
-TARGET_USER="${SUDO_USER:-$(whoami)}"
-TARGET_HOME=$(getent passwd "$TARGET_USER" | cut -d: -f6)
-
+# 2. Create fontconfig to force simple clean Arabic font (Noto Sans Arabic)
 mkdir -p /etc/fonts/conf.d
-mkdir -p "$TARGET_HOME/.config/fontconfig"
+mkdir -p /home/abdallah/.config/fontconfig
 
-# System-wide fontconfig: prefer Cairo for Arabic script
+# System-wide fontconfig: prefer Noto Sans Arabic for Arabic script
 cat > /etc/fonts/local.conf << 'FONTCONF'
 <?xml version="1.0"?>
 <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
 <fontconfig>
-  <!-- Force Premium Modern Arabic font globally -->
+  <!-- Force simple clean Arabic font globally -->
   
-  <!-- Set Cairo as the preferred Arabic font -->
+  <!-- Set Noto Sans Arabic as the preferred Arabic font -->
   <match>
     <test name="lang" compare="contains">
       <string>ar</string>
     </test>
     <edit name="family" mode="prepend" binding="strong">
-      <string>Cairo</string>
-      <string>Tajawal</string>
       <string>Noto Sans Arabic</string>
     </edit>
   </match>
 
-  <!-- Fallback: any Arabic text should use Cairo -->
+  <!-- Fallback: any Arabic text should use Noto Sans Arabic -->
   <match target="pattern">
     <test qual="any" name="family">
       <string>serif</string>
     </test>
     <edit name="family" mode="prepend" binding="strong">
-      <string>Cairo</string>
+      <string>Noto Sans Arabic</string>
     </edit>
   </match>
 
@@ -75,7 +42,7 @@ cat > /etc/fonts/local.conf << 'FONTCONF'
       <string>sans-serif</string>
     </test>
     <edit name="family" mode="prepend" binding="strong">
-      <string>Cairo</string>
+      <string>Noto Sans Arabic</string>
     </edit>
   </match>
 
@@ -84,7 +51,7 @@ cat > /etc/fonts/local.conf << 'FONTCONF'
       <string>monospace</string>
     </test>
     <edit name="family" mode="prepend" binding="strong">
-      <string>Cairo</string>
+      <string>Noto Sans Arabic</string>
     </edit>
   </match>
 
@@ -106,24 +73,29 @@ cat > /etc/fonts/local.conf << 'FONTCONF'
       <pattern><patelt name="family"><string>KacstScreen</string></patelt></pattern>
       <pattern><patelt name="family"><string>KacstTitle</string></patelt></pattern>
       <pattern><patelt name="family"><string>KacstTitleL</string></patelt></pattern>
+      <pattern><patelt name="family"><string>Noto Kufi Arabic</string></patelt></pattern>
+      <pattern><patelt name="family"><string>Noto Naskh Arabic</string></patelt></pattern>
+      <pattern><patelt name="family"><string>Noto Nastaliq Urdu</string></patelt></pattern>
     </rejectfont>
   </selectfont>
 
 </fontconfig>
 FONTCONF
 
-# 5. User-level sync
-if [ -d "$TARGET_HOME/.config/fontconfig" ]; then
-    cp /etc/fonts/local.conf "$TARGET_HOME/.config/fontconfig/fonts.conf"
-    chown "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config/fontconfig/fonts.conf"
-fi
+# 3. Same for user-level
+cp /etc/fonts/local.conf /home/abdallah/.config/fontconfig/fonts.conf
+chown abdallah:abdallah /home/abdallah/.config/fontconfig/fonts.conf
 
-# 6. Rebuild font cache
+# 4. Rebuild font cache
 fc-cache -f -v
 
-# 7. Kill terminal to refresh
+# 5. Fix keyboard layout - remove Arabic keyboard, keep only US
+sudo -u abdallah DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u abdallah)/bus" gsettings set org.gnome.libgnome-desktop.keyboard sources "[('xkb', 'us')]"
+sudo -u abdallah DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u abdallah)/bus" gsettings set org.cinnamon.desktop.input-sources sources "[('xkb', 'us')]"
+
+# 6. Kill gnome-terminal-server so it restarts with new font config
 killall gnome-terminal-server 2>/dev/null
 
 echo ""
-echo "=== ✨ Done! Cairo & Tajawal are now the default Arabic fonts. ==="
-echo "=== 🏢 Microsoft fonts (Arial/Times) are also installed. ==="
+echo "=== Done! Arabic fonts are now clean and simple (Noto Sans Arabic) ==="
+echo "=== Restart Cinnamon to apply everywhere ==="

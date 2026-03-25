@@ -6,13 +6,8 @@
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then
-  # Try to restart with pkexec if not root
-  if command -v pkexec >/dev/null 2>&1; then
-    exec pkexec bash "$0" "$@"
-  else
-    zenity --error --text="Please run the Hardware Manager with Administrative Privileges (sudo)." --title="EtherealOS"
-    exit 1
-  fi
+  zenity --error --text="Please run the Hardware Manager with Administrative Privileges (sudo)." --title="EtherealOS"
+  exit 1
 fi
 
 zenity --info --title="EtherealOS Control Center" \

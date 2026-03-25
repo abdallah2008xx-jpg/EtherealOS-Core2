@@ -148,10 +148,6 @@ fi
 # ── Step 7: Configure MIME associations for images ──
 echo ""
 echo "[7/7] 🖼️  Setting up image file associations..."
-
-# Identify target user
-TARGET_USER="${SUDO_USER:-abdallah}"
-
 if command -v feh >/dev/null 2>&1; then
   # Create feh.desktop if missing
   if [ ! -f /usr/share/applications/feh.desktop ]; then
@@ -169,73 +165,21 @@ DESKTOP
   fi
 
   # Set as default for common image types
-  # We use pkexec or direct su if DBUS is handled, but simple su - target_user is often enough for xdg-mime
-  if id "$TARGET_USER" >/dev/null 2>&1; then
-    su - "$TARGET_USER" -c "
-      xdg-mime default feh.desktop image/jpeg 2>/dev/null
-      xdg-mime default feh.desktop image/png 2>/dev/null
-      xdg-mime default feh.desktop image/gif 2>/dev/null
-      xdg-mime default feh.desktop image/webp 2>/dev/null
-      xdg-mime default feh.desktop image/bmp 2>/dev/null
-      xdg-mime default feh.desktop image/svg+xml 2>/dev/null
-    " 2>/dev/null
-    echo "  ✅ feh set as default image viewer for $TARGET_USER."
-  fi
+  su - abdallah -c "
+    xdg-mime default feh.desktop image/jpeg 2>/dev/null
+    xdg-mime default feh.desktop image/png 2>/dev/null
+    xdg-mime default feh.desktop image/gif 2>/dev/null
+    xdg-mime default feh.desktop image/webp 2>/dev/null
+    xdg-mime default feh.desktop image/bmp 2>/dev/null
+    xdg-mime default feh.desktop image/svg+xml 2>/dev/null
+  " 2>/dev/null
+  echo "  ✅ feh set as default image viewer."
 elif command -v eog >/dev/null 2>&1; then
-  if id "$TARGET_USER" >/dev/null 2>&1; then
-    su - "$TARGET_USER" -c "
-      xdg-mime default org.gnome.eog.desktop image/jpeg 2>/dev/null
-      xdg-mime default org.gnome.eog.desktop image/png 2>/dev/null
-    " 2>/dev/null
-    echo "  ✅ Eye of GNOME set as default image viewer for $TARGET_USER."
-  fi
-fi
-
-# ── Step 8: Configure Timeshift for Auto-Snapshots ──
-echo ""
-echo "[8/8] 📸 Configuring Timeshift & Snapshots..."
-if command -v timeshift >/dev/null 2>&1; then
-  # Allow wheel group to run timeshift WITHOUT password for auto-updates
-  echo "%wheel ALL=(ALL) NOPASSWD: /usr/bin/timeshift" > /etc/sudoers.d/timeshift_nopasswd
-  chmod 0440 /etc/sudoers.d/timeshift_nopasswd
-  
-  # Set default Timeshift config for Btrfs if it's the first run
-  if [ ! -f /etc/timeshift/timeshift.json ]; then
-    mkdir -p /etc/timeshift
-    cat > /etc/timeshift/timeshift.json << 'JSON'
-{
-  "backup_device_uuid": "",
-  "parent_device_uuid": "",
-  "do_first_run": "false",
-  "btrfs_mode": "true",
-  "include_btrfs_home_for_snapshots": "false",
-  "include_btrfs_home_for_restore": "false",
-  "stop_cron_emails": "true",
-  "btrfs_use_qgroup": "false",
-  "schedule_monthly": "false",
-  "schedule_weekly": "false",
-  "schedule_daily": "true",
-  "schedule_hourly": "false",
-  "schedule_boot": "true",
-  "count_monthly": "2",
-  "count_weekly": "3",
-  "count_daily": "5",
-  "count_hourly": "6",
-  "count_boot": "5",
-  "snapshot_device": "",
-  "snapshot_number": "",
-  "snapshot_uuid": "",
-  "repo_path": "/run/timeshift/backup",
-  "exclude": [],
-  "exclude-files": [],
-  "include": [],
-  "include-files": []
-}
-JSON
-  fi
-  echo "  ✅ Timeshift configured for Btrfs (Daily/Boot snapshots enabled)."
-else
-  echo "  ⚠ Timeshift not installed yet. Skipping config."
+  su - abdallah -c "
+    xdg-mime default org.gnome.eog.desktop image/jpeg 2>/dev/null
+    xdg-mime default org.gnome.eog.desktop image/png 2>/dev/null
+  " 2>/dev/null
+  echo "  ✅ Eye of GNOME set as default image viewer."
 fi
 
 # ── Final verification ──
@@ -253,13 +197,6 @@ else
   echo "  ❌ sudo: NOT installed"
 fi
 
-# Check Timeshift
-if command -v timeshift >/dev/null 2>&1; then
-  echo "  ✅ Timeshift: installed ($(which timeshift))"
-else
-  echo "  ❌ Timeshift: NOT installed"
-fi
-
 # Check image viewer
 if command -v feh >/dev/null 2>&1; then
   echo "  ✅ Image viewer: feh ($(which feh))"
@@ -275,7 +212,6 @@ echo ""
 echo "  الآن يمكن للمستخدم abdallah استخدام:"
 echo "    sudo emerge --ask=n <package>"
 echo "    sudo reboot"
-echo "    System Snapshot (من سطح المكتب)"
 echo ""
 echo "  لفتح الصور: انقر مرتين على أي صورة"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

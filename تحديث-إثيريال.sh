@@ -14,4 +14,3 @@ bash Ethereal-Update.sh
 echo ""
 echo "✅ اكتملت المهمة!"
 read -n 1 -s -p "اضغط أي زر للخروج..."
-

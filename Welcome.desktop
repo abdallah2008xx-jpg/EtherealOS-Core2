@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=👋 Welcome to Ethereal
+Name=Welcome to Ethereal
 Comment=Your first-time setup and information
-Exec=bash -c "cd ~/ethereal-update && bash Ethereal-Welcome.sh"
-Icon=help-about
+Exec=/home/abdallah/.local/bin/Ethereal-Welcome.sh
+Icon=system-help
 Terminal=false
 Categories=System;

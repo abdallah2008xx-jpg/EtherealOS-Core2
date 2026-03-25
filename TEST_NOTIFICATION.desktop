@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=فحص الإشعارات (اضغط هنا)
+Comment=Check for EtherealOS Updates
+Exec=bash /media/sf_gentoo-files/EtherealOS-Repo/Ethereal-Notifier.sh
+Icon=mail-send
+Terminal=false

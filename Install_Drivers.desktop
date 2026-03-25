@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=تثبيت تعريفات الجهاز
+Name[en]=Install Hardware Drivers
+Comment=Hardware Detection & Auto Installer
+Exec=gnome-terminal -e "sudo bash /opt/abdallahOS/driver-setup.sh"
+Icon=preferences-system
+Terminal=true
+Type=Application
+Categories=System;Settings;

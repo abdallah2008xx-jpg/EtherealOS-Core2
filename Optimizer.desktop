@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name= System Optimizer
+Name=Ethereal Optimizer
 Comment=Clean cache and memory buffers
-Exec=bash -c "cd ~/ethereal-update && bash Ethereal-Optimize-Storage.sh"
+Exec=/home/abdallah/.local/bin/Ethereal-Optimizer.sh
 Icon=utilities-system-monitor
 Terminal=false
 Categories=System;

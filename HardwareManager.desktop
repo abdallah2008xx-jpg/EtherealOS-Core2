@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=🖥️ Hardware Manager
+Name=Hardware Manager
 Comment=Manage EtherealOS Hardware Drivers
-Exec=bash -c "cd ~/ethereal-update && bash Ethereal-Hardware-Manager.sh"
+Exec=/home/abdallah/.local/bin/Ethereal-Hardware-Manager.sh
 Icon=preferences-system-devices
 Terminal=false
 Categories=System;Settings;HardwareSettings;

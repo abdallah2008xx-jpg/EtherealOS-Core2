@@ -17,9 +17,7 @@ echo ""
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 THEME_DIR="$HOME/.themes/Ethereal/cinnamon"
 mkdir -p "$THEME_DIR"
-mkdir -p "$HOME/.config/gtk-3.0"
 
-# Apply Cinnamon Theme
 if [ -f "$SCRIPT_DIR/cinnamon.css" ]; then
     cp "$SCRIPT_DIR/cinnamon.css" "$THEME_DIR/cinnamon.css"
 else
@@ -28,48 +26,29 @@ fi
 # Write required theme.json
 echo '{"name": "Ethereal Architect"}' > "$THEME_DIR/theme.json"
 
-# Apply GTK Theme
-if [ -f "$SCRIPT_DIR/gtk.css" ]; then
-    cp "$SCRIPT_DIR/gtk.css" "$HOME/.config/gtk-3.0/gtk.css"
-fi
-
 CSS_SRC="$THEME_DIR/cinnamon.css"
 CSS_LINES=$(wc -l < "$CSS_SRC" 2>/dev/null || echo 0)
-echo "[1/9] ✅ CSS Theme & GTK CSS installed."
+echo "[1/9] ✅ CSS Theme ($CSS_LINES lines) installed."
 
-# ── 2. Configure Panels: Bottom Dock + Top Bar + Left Sidebar ──
-# Panel layout: panel1=bottom (primary for "Add to panel"), panel2=top (pill), panel3=left (sidebar)
-gsettings set org.cinnamon panels-enabled "['1:0:bottom', '2:0:top', '3:0:left']"
-gsettings set org.cinnamon panels-height "['1:52', '2:40', '3:52']"
+# ── 2. Configure Panels: Top + Left Sidebar + Bottom Dock ──
+# Panel layout: panel1=top (pill bar), panel2=bottom (dock), panel3=left (sidebar)
+gsettings set org.cinnamon panels-enabled "['1:0:top', '2:0:bottom', '3:0:left']"
+gsettings set org.cinnamon panels-height "['1:40', '2:52', '3:52']"
 gsettings set org.cinnamon panels-autohide "['1:intel', '2:intel', '3:intel']"
 
 # Applet layout matching EtherealOS mockup:
-# panel1 (bottom): grouped window list center (dock)
-# panel2 (top): menu left, then OS name, systray/clock/status right
+# panel1 (top): menu left, then OS name, systray/clock/status right
+# panel2 (bottom): grouped window list center (dock)
 # panel3 (left): panel launchers (sidebar icons)
-gsettings set org.cinnamon enabled-applets "['panel2:left:0:menu@cinnamon.org:0', 'panel2:right:0:systray@cinnamon.org:1', 'panel2:right:1:xapp-status@cinnamon.org:2', 'panel2:right:2:keyboard@cinnamon.org:3', 'panel2:right:3:removable-drives@cinnamon.org:4', 'panel2:right:4:network@cinnamon.org:5', 'panel2:right:5:sound@cinnamon.org:6', 'panel2:right:6:power@cinnamon.org:7', 'panel2:right:7:calendar@cinnamon.org:8', 'panel2:right:8:notifications@cinnamon.org:9', 'panel2:right:9:user@cinnamon.org:10', 'panel1:center:0:grouped-window-list@cinnamon.org:11', 'panel3:center:0:panel-launchers@cinnamon.org:12']"
+gsettings set org.cinnamon enabled-applets "['panel1:left:0:menu@cinnamon.org:0', 'panel1:right:0:systray@cinnamon.org:1', 'panel1:right:1:xapp-status@cinnamon.org:2', 'panel1:right:2:keyboard@cinnamon.org:3', 'panel1:right:3:removable-drives@cinnamon.org:4', 'panel1:right:4:network@cinnamon.org:5', 'panel1:right:5:sound@cinnamon.org:6', 'panel1:right:6:power@cinnamon.org:7', 'panel1:right:7:calendar@cinnamon.org:8', 'panel1:right:8:notifications@cinnamon.org:9', 'panel1:right:9:user@cinnamon.org:10', 'panel2:center:0:grouped-window-list@cinnamon.org:11', 'panel3:center:0:panel-launchers@cinnamon.org:12']"
 
-echo "[2/9] ✅ Panels configured (Bottom primary dock + Top bar + Left sidebar)."
+echo "[2/9] ✅ Panels configured (Top bar + Left sidebar + Bottom dock)."
 
-# ── 3. Set Ethereal/Dark Theme & Live Reload ──
+# ── 3. Set Ethereal/Dark Theme ──
 gsettings set org.cinnamon.theme name "Ethereal"
 gsettings set org.cinnamon.desktop.interface gtk-theme "Adwaita-dark"
 gsettings set org.cinnamon.desktop.wm.preferences theme "Adwaita-dark"
-
-# Live reload the theme CSS using D-Bus (No heavy restart needed!)
-dbus-send --session --dest=org.Cinnamon --print-reply /org/Cinnamon org.Cinnamon.Eval string:'let Main = imports.ui.main; Main.themeManager._changeTheme();' > /dev/null 2>&1 || gsettings set org.cinnamon.theme name "Ethereal"
-
-# Force GTK to reload its cache by toggling themes briefly
-gsettings set org.cinnamon.desktop.interface gtk-theme "Adwaita"
-sleep 0.5
-gsettings set org.cinnamon.desktop.interface gtk-theme "Adwaita-dark"
-gsettings set org.cinnamon.desktop.wm.preferences theme "Adwaita-dark"
-
-# Gracefully push desktop icons and menus to apply the new GTK CSS
-# Gsettings toggle above already triggers the automatic live-reload of GTK components
-# so we DO NOT need to kill nemo-desktop (which causes the desktop icons to vanish).
-
-echo "[3/9] ✅ Dark GTK theme set & dynamically reloaded."
+echo "[3/9] ✅ Dark GTK theme set."
 
 # ── 4. Icons ──
 gsettings set org.cinnamon.desktop.interface icon-theme "Papirus-Dark"
@@ -115,34 +94,6 @@ gsettings set org.cinnamon.desktop.background picture-uri "file://$HOME/.backgro
 
 # Apply keyboard to US
 dconf write /org/cinnamon/desktop/input-sources/sources "[('xkb','us')]" 2>/dev/null
-
-# ── 10. Install Cinnamon Extension (Task Manager in Panel Right-Click) ──
-EXT_ID="ethereal-taskmgr@etherealos.com"
-EXT_DST="$HOME/.local/share/cinnamon/extensions/$EXT_ID"
-mkdir -p "$EXT_DST"
-
-if [ -d "$SCRIPT_DIR/$EXT_ID" ]; then
-    cp "$SCRIPT_DIR/$EXT_ID/extension.js" "$EXT_DST/" 2>/dev/null
-    cp "$SCRIPT_DIR/$EXT_ID/metadata.json" "$EXT_DST/" 2>/dev/null
-    echo "[10/10] ✅ Cinnamon Extension installed → $EXT_DST"
-fi
-
-# Enable the extension (non-destructive, won't duplicate)
-CURRENT_EXTS=$(gsettings get org.cinnamon enabled-extensions 2>/dev/null)
-if ! echo "$CURRENT_EXTS" | grep -q "$EXT_ID"; then
-    if [ "$CURRENT_EXTS" = "@as []" ] || [ -z "$CURRENT_EXTS" ]; then
-        gsettings set org.cinnamon enabled-extensions "['$EXT_ID']" 2>/dev/null
-    else
-        UPDATED=$(echo "$CURRENT_EXTS" | sed "s/\]$/, '$EXT_ID']/")
-        gsettings set org.cinnamon enabled-extensions "$UPDATED" 2>/dev/null
-    fi
-    echo "[10/10] ✅ Task Manager extension enabled in panel right-click!"
-else
-    echo "[10/10] ✅ Task Manager extension already enabled."
-fi
-
-# Restart Cinnamon Shell so extension loads immediately (safe, no logout)
-nohup bash -c "sleep 2 && dbus-send --session --type=method_call --dest=org.Cinnamon /org/Cinnamon org.Cinnamon.Eval string:'global.reexec_self()'" > /dev/null 2>&1 &
 
 echo "[9/9] ✅ EtherealOS — The Ethereal Architect — ACTIVATED!"
 echo ""
