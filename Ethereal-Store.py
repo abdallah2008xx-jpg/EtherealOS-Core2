@@ -207,50 +207,80 @@ class AppStore(Gtk.Window):
 
     def download_app(self, app):
         try:
-            # 1. Fetch latest release info using GitHub API with fallback
-            api_url = f"https://api.github.com/repos/{app['repo']}/releases/latest"
-            headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64)', 'Accept': 'application/vnd.github.v3+json'}
+            import ssl
+            import json
+            
+            # Create SSL context that doesn't verify certificates (some systems have issues)
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            repo = app['repo']
+            api_url = f"https://api.github.com/repos/{repo}/releases/latest"
+            headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64)'}
+            
+            print(f"[{app['name']}] Fetching from: {api_url}")
+            GLib.idle_add(app["btn"].set_label, "FINDING...")
             
             try:
                 req = urllib.request.Request(api_url, headers=headers)
-                resp = urllib.request.urlopen(req, timeout=15)
-                import json
-                release_data = json.loads(resp.read().decode('utf-8'))
-                assets = release_data.get('assets', [])
-            except:
-                # Fallback: parse HTML page
-                latest_url = f"https://github.com/{app['repo']}/releases/latest"
-                req = urllib.request.Request(latest_url, headers={'User-Agent': 'Mozilla/5.0'})
-                resp = urllib.request.urlopen(req, timeout=15)
-                html = resp.read().decode('utf-8')
+                resp = urllib.request.urlopen(req, timeout=20, context=ssl_context)
+                data = json.loads(resp.read().decode('utf-8'))
+                assets = data.get('assets', [])
+                tag = data.get('tag_name', 'latest')
+                print(f"[{app['name']}] Found tag: {tag}, assets: {len(assets)}")
+            except Exception as api_err:
+                print(f"[{app['name']}] API failed: {api_err}, trying fallback...")
+                # Fallback to direct URL pattern
+                latest_url = f"https://github.com/{repo}/releases/latest"
+                req = urllib.request.Request(latest_url, headers=headers)
+                resp = urllib.request.urlopen(req, timeout=20, context=ssl_context)
+                final_url = resp.geturl()
+                tag = final_url.split('/')[-1]
+                print(f"[{app['name']}] Fallback tag: {tag}")
+                
+                # Try to construct download URL from common patterns
                 assets = []
-                for chunk in html.split('href="')[1:]:
-                    if '.AppImage' in chunk and '/releases/download/' in chunk:
-                        url = chunk.split('"')[0]
-                        if not url.startswith('http'):
-                            url = 'https://github.com' + url
-                        assets.append({'browser_download_url': url, 'name': url.split('/')[-1]})
+                app_name = repo.split('/')[-1].lower()
+                patterns = [
+                    f"https://github.com/{repo}/releases/download/{tag}/{app_name.capitalize()}-{tag}-x86_64.AppImage",
+                    f"https://github.com/{repo}/releases/download/{tag}/{app_name}-{tag}-x86_64.AppImage",
+                    f"https://github.com/{repo}/releases/download/{tag}/{app_name}-{tag}.AppImage",
+                ]
+                for url in patterns:
+                    assets.append({'browser_download_url': url, 'name': url.split('/')[-1]})
             
-            # Find the best AppImage (prefer x86_64, avoid arm)
+            # Find AppImage
             dl_url = None
             filename = None
+            
             for asset in assets:
                 url = asset.get('browser_download_url', '')
                 name = asset.get('name', '')
-                if url and name.endswith('.AppImage'):
-                    # Skip ARM versions
+                if url and '.AppImage' in name:
                     if 'arm' in name.lower() or 'aarch' in name.lower():
                         continue
                     dl_url = url
                     filename = name
+                    print(f"[{app['name']}] Found: {filename}")
                     break
             
-            if not dl_url:
-                GLib.idle_add(self.fail, app, "No compatible AppImage found")
-                return
-                
-            out_path = os.path.join(self.app_dir, filename)
+            if not dl_url and assets:
+                # Try first asset that ends with AppImage
+                for asset in assets:
+                    url = asset.get('browser_download_url', '')
+                    name = asset.get('name', '')
+                    if url and name.endswith('.AppImage'):
+                        dl_url = url
+                        filename = name
+                        break
             
+            if not dl_url:
+                GLib.idle_add(self.fail, app, "No AppImage found in release")
+                return
+            
+            out_path = os.path.join(self.app_dir, filename)
+            print(f"[{app['name']}] Downloading to: {out_path}")
             GLib.idle_add(app["btn"].set_label, "DOWNLOADING...")
             
             # Download with progress
@@ -258,13 +288,29 @@ class AppStore(Gtk.Window):
                 if total > 0:
                     pct = min(1.0, count * block / total)
                     GLib.idle_add(app["pbar"].set_fraction, pct)
-                
-            urllib.request.urlretrieve(dl_url, out_path, reporthook=report)
-            os.chmod(out_path, 0o755)
             
-            # Create desktop file with proper icon
+            # Download with SSL context
+            req_dl = urllib.request.Request(dl_url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req_dl, timeout=60, context=ssl_context) as response:
+                total_size = int(response.headers.get('Content-Length', 0))
+                downloaded = 0
+                with open(out_path, 'wb') as f:
+                    while True:
+                        chunk = response.read(8192)
+                        if not chunk:
+                            break
+                        f.write(chunk)
+                        downloaded += len(chunk)
+                        if total_size > 0:
+                            pct = min(1.0, downloaded / total_size)
+                            GLib.idle_add(app["pbar"].set_fraction, pct)
+            
+            os.chmod(out_path, 0o755)
+            print(f"[{app['name']}] Download complete!")
+            
+            # Create desktop file
             icon_name = app.get("icon", "application-x-executable")
-            desktop_content = f"""[Desktop Entry]
+            desktop = f"""[Desktop Entry]
 Name={app['name']}
 Comment={app['desc']}
 Exec={out_path}
@@ -276,23 +322,19 @@ StartupNotify=true
 """
             dfile = os.path.join(self.shortcut_dir, f"ethereal_{app['id']}.desktop")
             with open(dfile, 'w') as f:
-                f.write(desktop_content)
+                f.write(desktop)
             os.chmod(dfile, 0o755)
-            
-            # Mark desktop file as trusted (Cinnamon/GNOME)
             os.system(f'gio set "{dfile}" metadata::trusted true 2>/dev/null || true')
             
-            # Update icon cache
-            os.system('gtk-update-icon-cache -f ~/.local/share/icons/ 2>/dev/null || true')
-            
             GLib.idle_add(self.succ, app)
+            print(f"[{app['name']}] Install complete!")
             
         except Exception as e:
             import traceback
             error_msg = str(e)
-            print(f"[{app['name']}] Install Failed:", error_msg)
+            print(f"[{app['name']}] ERROR: {error_msg}")
             print(traceback.format_exc())
-            GLib.idle_add(self.fail, app, error_msg)
+            GLib.idle_add(self.fail, app, error_msg[:50])
 
     def succ(self, app):
         app["pbar"].set_visible(False)
