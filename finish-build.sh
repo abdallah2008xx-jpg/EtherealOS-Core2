@@ -138,6 +138,18 @@ else
     SQUASH_SIZE=0
 fi
 
+if [ "$SQUASH_SIZE" -eq 0 ]; then
+    echo "🗜️ Building squashfs.img (xz compression)..."
+    rm -f "$SQUASH_IMG" 2>/dev/null || true
+    mkdir -p "$WORK/LiveOS"
+    mksquashfs / "$SQUASH_IMG" \
+      -comp xz -Xbcj x86 -b 1M -processors 2 -mem 1G \
+      -e /proc /sys /dev /mnt /tmp /var/tmp /media /run \
+         /home/abdallah/.cache /var/cache /usr/src /usr/portage /var/db/repos /var/lib/portage
+    ls -lh "$SQUASH_IMG" || true
+    SQUASH_SIZE=$(stat -c%s "$SQUASH_IMG" 2>/dev/null || echo 0)
+fi
+
 if [ "$SQUASH_SIZE" -ge 4294967295 ]; then
     echo "🗜️ Rebuilding squashfs.img to fit under 4GB (xz compression)..."
     rm -f "$SQUASH_IMG" 2>/dev/null || true
@@ -147,6 +159,11 @@ if [ "$SQUASH_SIZE" -ge 4294967295 ]; then
       -e /proc /sys /dev /mnt /tmp /var/tmp /media /run \
          /home/abdallah/.cache /var/cache /usr/src /usr/portage /var/db/repos /var/lib/portage
     ls -lh "$SQUASH_IMG" || true
+fi
+
+if [ ! -f "$SQUASH_IMG" ]; then
+    echo "❌ FATAL: squashfs.img not found at $SQUASH_IMG"
+    exit 1
 fi
 
 echo "💿 MINTING THE FLAWLESS ISO..."
