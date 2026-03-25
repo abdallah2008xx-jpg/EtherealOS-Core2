@@ -5,7 +5,7 @@
 # ==========================================================
 
 UPDATE_DIR="$HOME/ethereal-update"
-REPO_URL="https://github.com/abdallah2008xx-jpg/EtherealOS-Core.git"
+REPO_URL="https://github.com/abdallah2008xx-jpg/EtherealOS-Core2.git"
 LOG_FILE="$UPDATE_DIR/update.log"
 
 # Create update directory if missing

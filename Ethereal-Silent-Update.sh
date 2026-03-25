@@ -5,9 +5,9 @@
 # ==========================================================
 
 UPDATE_DIR="$HOME/ethereal-update"
-REPO_URL="https://github.com/abdallah2008xx-jpg/EtherealOS-Core.git"
-LAUNCHER_URL="https://raw.githubusercontent.com/abdallah2008xx-jpg/EtherealOS-Core/main/Ethereal-Update-Launcher.sh"
-MANAGER_URL="https://raw.githubusercontent.com/abdallah2008xx-jpg/EtherealOS-Core/main/Ethereal-Update-Manager.py"
+REPO_URL="https://github.com/abdallah2008xx-jpg/EtherealOS-Core2.git"
+LAUNCHER_URL="https://raw.githubusercontent.com/abdallah2008xx-jpg/EtherealOS-Core2/main/Ethereal-Update-Launcher.sh"
+MANAGER_URL="https://raw.githubusercontent.com/abdallah2008xx-jpg/EtherealOS-Core2/main/Ethereal-Update-Manager.py"
 
 # Show startup notification
 if command -v notify-send >/dev/null 2>&1; then

@@ -181,7 +181,7 @@ cd ~
 
 ## 🔗 Repository URL
 ```
-https://github.com/abdallah2008xx-jpg/EtherealOS-Core
+https://github.com/abdallah2008xx-jpg/EtherealOS-Core2
 ```
 
 ---

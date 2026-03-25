@@ -5,8 +5,8 @@
 # ==========================================================
 
 UPDATE_DIR="$HOME/ethereal-update"
-REPO_URL="https://github.com/abdallah2008xx-jpg/EtherealOS-Core.git"
-LAUNCHER_URL="https://raw.githubusercontent.com/abdallah2008xx-jpg/EtherealOS-Core/main/Ethereal-Update-Launcher.sh"
+REPO_URL="https://github.com/abdallah2008xx-jpg/EtherealOS-Core2.git"
+LAUNCHER_URL="https://raw.githubusercontent.com/abdallah2008xx-jpg/EtherealOS-Core2/main/Ethereal-Update-Launcher.sh"
 
 clear
 echo "🪐 EtherealOS Smart Update System"
@@ -32,7 +32,7 @@ download_launcher_direct() {
 # Function to download Update Manager directly
 download_manager_direct() {
     echo "📥 Downloading Update Manager directly..."
-    MANAGER_URL="https://raw.githubusercontent.com/abdallah2008xx-jpg/EtherealOS-Core/main/Ethereal-Update-Manager.py"
+    MANAGER_URL="https://raw.githubusercontent.com/abdallah2008xx-jpg/EtherealOS-Core2/main/Ethereal-Update-Manager.py"
     
     if command -v wget >/dev/null 2>&1; then
         wget -q "$MANAGER_URL" -O "$UPDATE_DIR/Ethereal-Update-Manager.py" 2>/dev/null
