@@ -2,7 +2,7 @@
 Type=Application
 Name=🪐 Update EtherealOS
 Comment=Fetch latest system patches from GitHub
-Exec=bash /usr/local/bin/Ethereal-Update.sh
+Exec=python3 /usr/local/bin/Ethereal-Update-Manager.py
 Icon=system-software-update
 Terminal=false
 Categories=System;Settings;

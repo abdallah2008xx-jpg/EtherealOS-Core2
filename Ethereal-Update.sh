@@ -1,159 +1,143 @@
 #!/bin/bash
 # ==========================================================
-# EtherealOS Update v4.13 - LIGHTWEIGHT Auto-Updater
+# EtherealOS Modular Update Engine v5.0
 # ==========================================================
 
 cd "$(dirname "$0")"
 REPO_DIR="$(pwd)"
 
-# ═══════════════════════════════════════════
-# STEP 1: Fix Browser FIRST (outside zenity pipe!)
-# ═══════════════════════════════════════════
-mkdir -p "$HOME/.mozilla/firefox/ethereal.default-release"
-if [ ! -f "$HOME/.mozilla/firefox/profiles.ini" ]; then
-    cat > "$HOME/.mozilla/firefox/profiles.ini" << 'PROF'
+# ─── FUNCTIONS ───
+
+fix_browser() {
+    echo "10"; echo "# 🦊 Configuring Firefox profile..."
+    mkdir -p "$HOME/.mozilla/firefox/ethereal.default-release"
+    if [ ! -f "$HOME/.mozilla/firefox/profiles.ini" ]; then
+        cat > "$HOME/.mozilla/firefox/profiles.ini" << 'PROF'
 [Install4F96D1932A9F858E]
 Default=ethereal.default-release
 Locked=1
-
 [General]
 StartWithLastProfile=1
 Version=2
-
 [Profile0]
 Name=default-release
 IsRelative=1
 Path=ethereal.default-release
 Default=1
 PROF
-fi
+    fi
+}
 
-# Deploy autostart for future boots
-mkdir -p "$HOME/.config/autostart"
-cp Ethereal-Browser-Autostart.desktop "$HOME/.config/autostart/" 2>/dev/null
-cp Ethereal-Notifier-Autostart.desktop "$HOME/.config/autostart/" 2>/dev/null
+check_internet() {
+    echo "15"; echo "# 📶 Checking Internet Connection..."
+    if ! ping -c 1 8.8.8.8 >/dev/null 2>&1; then
+        echo "Error: No internet connection. Update aborted." >&2
+        return 1
+    fi
+}
 
-# ═══════════════════════════════════════════
-# STEP 2: Update & Deploy (inside zenity for UI)
-# ═══════════════════════════════════════════
-(
-echo "5"; echo "# 📶 Checking Internet Connection..."
-if ! ping -c 1 8.8.8.8 >/dev/null 2>&1; then
-    echo "Error: No internet connection. Update aborted." >&2
-    exit 1
-fi
+verify_env() {
+    echo "20"; echo "# ⚙️ Verifying System Environment..."
+    if [ "$(id -u)" -eq 0 ]; then
+        echo "Error: Please do not run this as root directly. Use regular user." >&2
+        return 1
+    fi
+    if ! command -v git >/dev/null 2>&1; then
+        echo "Error: Git is missing. Essential for updates." >&2
+        return 1
+    fi
+}
 
-echo "7"; echo "# ⚙️ Verifying System Environment..."
-if [ "$(id -u)" -eq 0 ]; then
-    echo "Error: Please do not run this as root directly. Use regular user." >&2
-    exit 1
-fi
-if ! command -v git >/dev/null 2>&1; then
-    echo "Error: Git is missing. Essential for updates." >&2
-    exit 1
-fi
+pull_updates() {
+    echo "30"; echo "# ⬇️ Downloading latest patches..."
+    if ! git pull origin main 2>&1; then
+        echo "Error: Failed to pull updates from GitHub." >&2
+        return 1
+    fi
+}
 
-echo "10"; echo "# 📡 Contacting Ethereal Servers..." ; sleep 1
+install_scripts() {
+    echo "45"; echo "# 🔧 Installing System Scripts to /usr/local/bin..."
+    sudo cp "$REPO_DIR"/Ethereal-*.sh /usr/local/bin/ 2>/dev/null
+    sudo cp "$REPO_DIR"/*.py /usr/local/bin/ 2>/dev/null
+    sudo chmod +x /usr/local/bin/Ethereal-* 2>/dev/null
+    sudo chmod +x /usr/local/bin/*.py 2>/dev/null
+}
 
-echo "25"; echo "# 📸 Creating Safety Snapshot & Syncing..."
-# Ethereal-Safe-Update.sh handles its own elevation and snapshotting.
-# We call it to perform the core system update safely.
-if [ -f "$REPO_DIR/Ethereal-Safe-Update.sh" ]; then
-    bash "$REPO_DIR/Ethereal-Safe-Update.sh" > /dev/null 2>&1
-fi
-sleep 1
-
-echo "35"; echo "# ⬇️ Downloading Updates..."
-if ! git pull origin main 2>&1; then
-    echo "Error: Failed to pull updates from GitHub." >&2
-    exit 1
-fi
-sleep 1
-
-echo "45"; echo "# 🏥 System Health Check..."
-# Ensure Flatpak is configured
-if command -v flatpak >/dev/null 2>&1; then
-    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo 2>/dev/null
-fi
-# Ensure Snapd is running
-if command -v snap >/dev/null 2>&1; then
-    # snapd service start now handled in Final-Polish as root
-    true
-fi
-
-echo "45"; echo "# 🔧 Installing System Scripts to /usr/local/bin..."
-# Install all Ethereal scripts to a global location for path consistency
-sudo cp "$REPO_DIR"/Ethereal-*.sh /usr/local/bin/ 2>/dev/null
-sudo cp "$REPO_DIR"/*.py /usr/local/bin/ 2>/dev/null
-sudo chmod +x /usr/local/bin/Ethereal-* 2>/dev/null
-sudo chmod +x /usr/local/bin/*.py 2>/dev/null
-
-echo "45"; echo "# 🧹 Deep Cleaning Desktop Launchers..."
-# Identify and remove OLD or duplicated Ethereal launchers
-# This targets files by keyword and by checking internal 'Ethereal' markers
-for file in "$HOME/Desktop"/*.desktop; do
-    if [ -f "$file" ]; then
-        # Remove if filename contains Ethereal/Boost/Store/Snapshot/Update
-        case "$(basename "$file")" in
-            *Ethereal*|*Boost*|*Store*|*Snapshot*|*Update*|*GameMode*|*Repair*|*Optimizer*|*Hardware*)
+clean_desktop() {
+    echo "55"; echo "# 🧹 Deep Cleaning Desktop Launchers..."
+    for file in "$HOME/Desktop"/*.desktop; do
+        if [ -f "$file" ]; then
+            case "$(basename "$file")" in
+                *Ethereal*|*Boost*|*Store*|*Snapshot*|*Update*|*GameMode*|*Repair*|*Optimizer*|*Hardware*)
+                    rm -f "$file" 2>/dev/null
+                    ;;
+            esac
+            if grep -q "Name=.*\(Ethereal\|Boost\|Store\)" "$file" 2>/dev/null; then
                 rm -f "$file" 2>/dev/null
-                ;;
-        esac
-        # OR if the file content HAS "Ethereal" in the name field
-        if grep -q "Name=.*\(Ethereal\|Boost\|Store\)" "$file" 2>/dev/null; then
-            rm -f "$file" 2>/dev/null
+            fi
         fi
-    fi
-done
+    done
+}
 
-echo "55"; echo "# 📂 Deploying Desktop Icons..."
-mkdir -p "$HOME/Desktop"
-# Copy all .desktop files from repo EXCEPT internal Autostart ones
-find "$REPO_DIR" -maxdepth 1 -name "*.desktop" ! -name "*-Autostart.desktop" -exec cp {} "$HOME/Desktop/" \;
-# Fix hardcoded paths in deployed desktop files
-sed -i "s|/home/abdallah|$HOME|g" "$HOME/Desktop"/*.desktop 2>/dev/null
-chmod +x "$HOME/Desktop"/*.desktop 2>/dev/null
+deploy_desktop() {
+    echo "65"; echo "# 📂 Deploying Desktop Icons..."
+    mkdir -p "$HOME/Desktop"
+    find "$REPO_DIR" -maxdepth 1 -name "*.desktop" ! -name "*-Autostart.desktop" -exec cp {} "$HOME/Desktop/" \;
+    sed -i "s|/home/abdallah|$HOME|g" "$HOME/Desktop"/*.desktop 2>/dev/null
+    chmod +x "$HOME/Desktop"/*.desktop 2>/dev/null
+    
+    echo "70"; echo "# 🔐 Marking launchers as trusted..."
+    for file in "$HOME/Desktop"/*.desktop; do
+        if [ -f "$file" ]; then
+            gio set "$file" metadata::trusted true 2>/dev/null || true
+            chmod +x "$file" 2>/dev/null || true
+        fi
+    done
+}
 
-# Mark desktop files as trusted (Cinnamon/Nemo requirement)
-echo "58"; echo "# 🔐 Marking launchers as trusted..."
-for file in "$HOME/Desktop"/*.desktop; do
-    if [ -f "$file" ]; then
-        # Use both gio and the trusted metadata to ensure Cinnamon accepts it
-        gio set "$file" metadata::trusted true 2>/dev/null || true
-        # Ensure the file is executable by the user
-        chmod +x "$file" 2>/dev/null || true
-    fi
-done
+update_icons_fonts() {
+    echo "80"; echo "# 🎨 Updating Icons & Fonts..."
+    mkdir -p "$HOME/.local/share/icons/ethereal"
+    cp "$REPO_DIR"/icons/*.svg "$HOME/.local/share/icons/ethereal/" 2>/dev/null
+    bash "$REPO_DIR"/install-papirus-icons.sh 2>/dev/null || true
+    bash "$REPO_DIR"/fix-arabic.sh > /dev/null 2>&1
+}
 
-# Update icons
-echo "60"; echo "# 🎨 Updating App Icons..."
-mkdir -p "$HOME/.local/share/icons/ethereal"
-cp "$REPO_DIR"/icons/*.svg "$HOME/.local/share/icons/ethereal/" 2>/dev/null
+final_polish() {
+    echo "90"; echo "# 🛡️ Finalizing System Polish..."
+    bash "$REPO_DIR"/install-appimagelauncher.sh > /dev/null 2>&1
+    bash "$REPO_DIR"/Ethereal-Final-Polish.sh > /dev/null 2>&1
+    bash apply-theme.sh > /dev/null 2>&1
+}
 
-# Update Papirus icon theme
-echo "65"; echo "# 📦 Updating Papirus Icon Theme..."
-bash "$REPO_DIR"/install-papirus-icons.sh 2>/dev/null || true
+# ─── DISPATCHER ───
 
-# Update Fonts (Cairo, Tajawal, MS Fonts)
-echo "70"; echo "# ✍️ Enhancing System Fonts..."
-bash "$REPO_DIR"/fix-arabic.sh > /dev/null 2>&1
-
-# Setup AppImageLauncher
-echo "75"; echo "# 📦 Configuring AppImage Launcher..."
-bash "$REPO_DIR"/install-appimagelauncher.sh > /dev/null 2>&1
-
-# Final System Polish (Dynamic Swap, etc.)
-echo "80"; echo "# 🛡️ Finalizing System Polish..."
-bash "$REPO_DIR"/Ethereal-Final-Polish.sh > /dev/null 2>&1
-
-echo "90"; echo "# 🎨 Applying Theme..."
-bash apply-theme.sh > /dev/null 2>&1
-
-echo "100"; echo "# ✨ Update Complete!"
-sleep 1
-) | zenity --progress --title="🪐 EtherealOS Update" \
-           --text="Checking for updates..." \
-           --percentage=0 --auto-close --auto-kill --width=400 2>/dev/null
-
-VERSION=$(cat "$REPO_DIR/version.txt" 2>/dev/null || echo "latest")
-zenity --info --title="Update Complete" --text="✅ EtherealOS v${VERSION} Updated!\n\n🦊 Firefox is ready.\n🖱️ Right-click taskbar → Task Manager" --width=300 2>/dev/null &
+case "$1" in
+    --browser) fix_browser ;;
+    --network) check_internet ;;
+    --env) verify_env ;;
+    --pull) pull_updates ;;
+    --scripts) install_scripts ;;
+    --clean) clean_desktop ;;
+    --deploy) deploy_desktop ;;
+    --icons) update_icons_fonts ;;
+    --polish) final_polish ;;
+    --full)
+        (
+        fix_browser
+        check_internet
+        verify_env
+        pull_updates
+        install_scripts
+        clean_desktop
+        deploy_desktop
+        update_icons_fonts
+        final_polish
+        echo "100"; echo "# ✨ Update Complete!"
+        ) | zenity --progress --title="🪐 EtherealOS Update" --auto-close --auto-kill --width=400 2>/dev/null
+        ;;
+    *)
+        echo "Usage: $0 [all|--browser|--network|--env|--pull|--scripts|--clean|--deploy|--icons|--polish|--full]"
+        ;;
+esac
