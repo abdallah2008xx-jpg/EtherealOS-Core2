@@ -132,7 +132,7 @@ menuentry "🚨 EtherealOS - Emergency Shell (bash)" {
 GRUBCFG
 
 echo "💿 MINTING THE FLAWLESS ISO..."
-grub-mkrescue -o /media/sf_gentoo-files/EtherealOS-v6.0-Immortal.iso "$WORK" -- -volid ETHEREALOS -iso_level 3 -udf on -allow_limited_size
+grub-mkrescue -o /media/sf_gentoo-files/EtherealOS-v6.0-Immortal.iso "$WORK" -- -volid ETHEREALOS -iso-level 3 -udf
 
 echo "🏆 =========================================="
 echo "   ✅ ISO SUCCESS: EtherealOS-v6.0-Immortal.iso"
