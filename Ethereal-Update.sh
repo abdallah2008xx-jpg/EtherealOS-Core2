@@ -64,7 +64,7 @@ if command -v flatpak >/dev/null 2>&1; then
 fi
 # Ensure Snapd is running
 if command -v snap >/dev/null 2>&1; then
-    sudo rc-service snapd start 2>/dev/null || true
+    pkexec rc-service snapd start 2>/dev/null || true
 fi
 
 echo "45"; echo "# 🧹 Cleaning old Ethereal launchers..."
@@ -80,6 +80,8 @@ echo "55"; echo "# 📂 Deploying Desktop Icons..."
 mkdir -p "$HOME/Desktop"
 # Copy all .desktop files from repo EXCEPT internal Autostart ones
 find "$REPO_DIR" -maxdepth 1 -name "*.desktop" ! -name "*-Autostart.desktop" -exec cp {} "$HOME/Desktop/" \;
+# Fix hardcoded paths in deployed desktop files
+sed -i "s|/home/abdallah|$HOME|g" "$HOME/Desktop"/*.desktop 2>/dev/null
 chmod +x "$HOME/Desktop"/*.desktop 2>/dev/null
 
 # Mark desktop files as trusted (Cinnamon/Nemo requirement)

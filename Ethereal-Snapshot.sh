@@ -17,7 +17,7 @@ if ! command -v timeshift &> /dev/null; then
 fi
 
 echo "30"; echo "# 📸 Creating System Snapshot..."
-timeshift --create --comments "Manual Snapshot (Ethereal Tool)" --tags M
+pkexec timeshift --create --comments "Manual Snapshot (Ethereal Tool)" --tags M
 
 echo "100"; echo "# ✨ Snapshot created successfully!"
 sleep 1

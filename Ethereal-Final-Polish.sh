@@ -66,7 +66,7 @@ echo "6. Enabling Flatpak & Snap Support (Binary Apps)..."
 # This allows users to install apps without waiting for long compile times.
 if ! command -v flatpak >/dev/null 2>&1; then
     echo "   → Installing Flatpak..."
-    sudo emerge --ask=n --quiet sys-apps/flatpak 2>/dev/null || true
+    pkexec emerge --ask=n --quiet sys-apps/flatpak 2>/dev/null || true
 fi
 if command -v flatpak >/dev/null 2>&1; then
     echo "   → Adding Flathub Repository..."
@@ -75,25 +75,25 @@ fi
 
 if ! command -v snap >/dev/null 2>&1; then
     echo "   → Installing Snapd..."
-    sudo emerge --ask=n --quiet app-containers/snapd 2>/dev/null || true
+    pkexec emerge --ask=n --quiet app-containers/snapd 2>/dev/null || true
 fi
 if command -v snap >/dev/null 2>&1; then
     echo "   → Enabling Snap Service..."
-    sudo rc-update add snapd default 2>/dev/null || true
-    sudo rc-service snapd start 2>/dev/null || true
+    pkexec rc-update add snapd default 2>/dev/null || true
+    pkexec rc-service snapd start 2>/dev/null || true
     # Create the /snap symlink if it doesn't exist
-    [ ! -L /snap ] && sudo ln -s /var/lib/snapd/snap /snap 2>/dev/null || true
+    [ ! -L /snap ] && pkexec ln -s /var/lib/snapd/snap /snap 2>/dev/null || true
 fi
 
-echo "8. Enhancing Hardware (Battery, Printing, Bluetooth)..."
+echo "7. Enhancing Hardware (Battery, Printing, Bluetooth)..."
 # A. Power Management (TLP)
 if ! command -v tlp >/dev/null 2>&1; then
     echo "   → Installing TLP Power Management..."
-    sudo emerge --ask=n --quiet sys-power/tlp 2>/dev/null || true
+    pkexec emerge --ask=n --quiet sys-power/tlp 2>/dev/null || true
 fi
 if command -v tlp >/dev/null 2>&1; then
-    sudo rc-update add tlp default 2>/dev/null || true
-    sudo rc-service tlp start 2>/dev/null || true
+    pkexec rc-update add tlp default 2>/dev/null || true
+    pkexec rc-service tlp start 2>/dev/null || true
 fi
 
 # B. Printing Support (CUPS & Drivers)
@@ -112,8 +112,13 @@ if ! command -v bluetoothd >/dev/null 2>&1; then
     sudo emerge --ask=n --quiet net-wireless/bluez net-wireless/blueman 2>/dev/null || true
 fi
 if command -v bluetoothd >/dev/null 2>&1; then
-    sudo rc-update add bluetooth default 2>/dev/null || true
-    sudo rc-service bluetooth start 2>/dev/null || true
+    pkexec rc-update add bluetooth default 2>/dev/null || true
+    pkexec rc-service bluetooth start 2>/dev/null || true
+    # Fix: Enable Bluetooth Auto-Connect (耳机自动连接)
+    if [ -f /etc/bluetooth/main.conf ]; then
+        pkexec sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf
+        pkexec sed -i 's/^AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf
+    fi
 fi
 
 # D. Thermal Management (thermald)
@@ -128,21 +133,21 @@ fi
 
 # E. Auto-Mount Support (gvfs & udisks)
 echo "   → Configuring Auto-Mount for External Drives..."
-sudo emerge --ask=n --quiet gnome-base/gvfs sys-apps/udisks 2>/dev/null || true
-sudo rc-update add udisks2 default 2>/dev/null || true
-sudo rc-service udisks2 start 2>/dev/null || true
+pkexec emerge --ask=n --quiet gnome-base/gvfs sys-apps/udisks 2>/dev/null || true
+pkexec rc-update add udisks2 default 2>/dev/null || true
+pkexec rc-service udisks2 start 2>/dev/null || true
 
 # Configure Cinnamon to auto-mount when a drive is plugged in
 gsettings set org.cinnamon.desktop.media-handling automount true 2>/dev/null
 gsettings set org.cinnamon.desktop.media-handling automount-open true 2>/dev/null
 
-echo "9. Integrating Multimedia Codecs (Video Fix)..."
+echo "8. Integrating Multimedia Codecs (Video Fix)..."
 # Call the codec setup script (as root)
 if [ -f "$(dirname "$0")/Ethereal-Codecs-Setup.sh" ]; then
     sudo bash "$(dirname "$0")/Ethereal-Codecs-Setup.sh"
 fi
 
-echo "10. Deploying Glassmorphism Notification System (Dunst)..."
+echo "9. Deploying Glassmorphism Notification System (Dunst)..."
 # Ensure dunst is installed
 if ! command -v dunst >/dev/null 2>&1; then
     sudo emerge --ask=n --quiet x11-misc/dunst 2>/dev/null || true
@@ -153,6 +158,14 @@ if [ -f "$(dirname "$0")/dunstrc" ]; then
     cp "$(dirname "$0")/dunstrc" ~/.config/dunst/dunstrc
 fi
 
+echo "10. Integrating Privacy Portals (Flatpak/XDG)..."
+# Install XDG Desktop Portals for camera/mic permission prompts
+pkexec emerge --ask=n --quiet sys-apps/xdg-desktop-portal sys-apps/xdg-desktop-portal-gtk sys-apps/xdg-desktop-portal-xapp 2>/dev/null || true
+
+echo "11. Enabling Fractional Scaling (HiDPI Support)..."
+# Enable experimental fractional scaling in Cinnamon
+gsettings set org.cinnamon.muffin experimental-features "['scale-monitor-framebuffer']" 2>/dev/null
+
 echo "12. Enabling Eye Comfort (Night Light)..."
 # Enable Cinnamon's native Night Light with an automatic schedule
 gsettings set org.cinnamon.settings-daemon.plugins.color night-light-enabled true 2>/dev/null
@@ -160,17 +173,17 @@ gsettings set org.cinnamon.settings-daemon.plugins.color night-light-schedule-au
 
 echo "13. Deploying Automated Maintenance (Trash & Tmp Cleaning)..."
 # Create a cleanup script that removes files older than 30 days
-cat << 'EOF' | sudo tee /usr/local/bin/ethereal-cleanup.sh > /dev/null
+cat << 'EOF' | pkexec tee /usr/local/bin/ethereal-cleanup.sh > /dev/null
 #!/bin/bash
 # EtherealOS Maintenance - Clean Trash and Tmp (>30 days)
 find ~/.local/share/Trash/files/* -mtime +30 -exec rm -rf {} + 2>/dev/null
-sudo find /tmp -type f -atime +30 -delete 2>/dev/null
+pkexec find /tmp -type f -atime +30 -delete 2>/dev/null
 EOF
-sudo chmod +x /usr/local/bin/ethereal-cleanup.sh
+pkexec chmod +x /usr/local/bin/ethereal-cleanup.sh
 # Add to crontab (Weekly at midnight on Sunday)
 (crontab -l 2>/dev/null; echo "0 0 * * 0 /usr/local/bin/ethereal-cleanup.sh") | crontab - 2>/dev/null || true
 
-echo "11. Installing Office & PDF Suite (BTEC Ready)..."
+echo "14. Installing Office & PDF Suite (BTEC Ready)..."
 # A. Okular (Premium PDF with Signing/Annotations)
 if ! command -v okular >/dev/null 2>&1; then
     echo "   → Installing Okular (PDF Reader)..."
@@ -196,7 +209,7 @@ if command -v swapspace >/dev/null 2>&1; then
     sudo rc-service swapspace start 2>/dev/null || true
 fi
 
-echo "14. Optimizing System Core (Pro Gaming Kernel)..."
+echo "16. Optimizing System Core (Pro Gaming Kernel)..."
 # Add XanMod/Liquorix logic (using Gentoo overlays or binary sources)
 if ! uname -r | grep -qiE "xanmod|liquorix"; then
     echo "   → Note: High-Performance Kernel (XanMod/Liquorix) is recommended."
@@ -204,6 +217,21 @@ if ! uname -r | grep -qiE "xanmod|liquorix"; then
     # We add the command to the Toolkit for the user to trigger when ready
     echo "   # To upgrade to XanMod (Optimized for Gaming):" >> Ethereal-ToolKit.sh
     echo "   # sudo emerge --ask sys-kernel/xanmod-kernel-bin" >> Ethereal-ToolKit.sh
+fi
+
+echo "17. Optimizing Storage (Btrfs Zstd)..."
+if [ -f "$(dirname "$0")/Ethereal-Optimize-Storage.sh" ]; then
+    sudo bash "$(dirname "$0")/Ethereal-Optimize-Storage.sh"
+fi
+
+echo "18. Enhancing System Stability (OOM Protection)..."
+if [ -f "$(dirname "$0")/Ethereal-Stability-Fix.sh" ]; then
+    sudo bash "$(dirname "$0")/Ethereal-Stability-Fix.sh"
+fi
+
+echo "19. Securing System (Firewall Setup)..."
+if [ -f "$(dirname "$0")/Ethereal-Security-Setup.sh" ]; then
+    sudo bash "$(dirname "$0")/Ethereal-Security-Setup.sh"
 fi
 
 echo "EtherealOS Final Polish Complete!"

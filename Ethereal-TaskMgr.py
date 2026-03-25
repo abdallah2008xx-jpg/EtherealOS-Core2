@@ -417,7 +417,15 @@ class TaskManager(Gtk.Window):
                     
                     bb = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL); bb.set_size_request(100, -1)
                     btn = Gtk.Button(label="End Task"); btn.set_name("kill-btn"); btn.set_halign(Gtk.Align.END)
-                    btn.connect("clicked", lambda b,pid=p['pid'],bx=box,rw=row: [bx.get_style_context().add_class("killed"), GLib.timeout_add(150, lambda: os.kill(int(pid), 9) or self.proc_list.remove(rw) and False)])
+                    def kill_proc(b, pid, bx, rw):
+                        try:
+                            bx.get_style_context().add_class("killed")
+                            os.kill(int(pid), 9)
+                            GLib.timeout_add(150, lambda: self.proc_list.remove(rw) and False)
+                        except Exception as kill_err:
+                            print(f"Kill failed: {kill_err}")
+                            bx.get_style_context().remove_class("killed")
+                    btn.connect("clicked", kill_proc, p['pid'], box, row)
                     bb.pack_end(btn, False, False, 0)
                     
                     box.pack_start(ln, True, True, 0); box.pack_start(lp, False, False, 0)

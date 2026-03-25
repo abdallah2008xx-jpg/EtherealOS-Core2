@@ -35,8 +35,11 @@ fi
 
 # 4. Create fontconfig to force Modern Arabic fonts
 echo "⚙️ Configuring Font Priorities..."
+TARGET_USER="${SUDO_USER:-$(whoami)}"
+TARGET_HOME=$(getent passwd "$TARGET_USER" | cut -d: -f6)
+
 mkdir -p /etc/fonts/conf.d
-mkdir -p /home/abdallah/.config/fontconfig
+mkdir -p "$TARGET_HOME/.config/fontconfig"
 
 # System-wide fontconfig: prefer Cairo for Arabic script
 cat > /etc/fonts/local.conf << 'FONTCONF'
@@ -110,8 +113,10 @@ cat > /etc/fonts/local.conf << 'FONTCONF'
 FONTCONF
 
 # 5. User-level sync
-cp /etc/fonts/local.conf /home/abdallah/.config/fontconfig/fonts.conf
-chown abdallah:abdallah /home/abdallah/.config/fontconfig/fonts.conf
+if [ -d "$TARGET_HOME/.config/fontconfig" ]; then
+    cp /etc/fonts/local.conf "$TARGET_HOME/.config/fontconfig/fonts.conf"
+    chown "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.config/fontconfig/fonts.conf"
+fi
 
 # 6. Rebuild font cache
 fc-cache -f -v

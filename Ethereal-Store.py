@@ -326,7 +326,7 @@ class EtherealStore(Gtk.Window):
                 GLib.idle_add(app["status_widget"].set_text, f"Installing {pkg_id} via Flatpak...")
                 GLib.idle_add(app["pbar_widget"].set_fraction, 0.5)
                 # Run flatpak install
-                res = subprocess.run(["flatpak", "install", "-y", "flathub", pkg_id], capture_output=True, text=True)
+                res = subprocess.run(["pkexec", "flatpak", "install", "-y", "flathub", pkg_id], capture_output=True, text=True)
                 if res.returncode != 0:
                     raise Exception(f"Flatpak error: {res.stderr}")
                 GLib.idle_add(self.on_install_success, app)
@@ -337,7 +337,7 @@ class EtherealStore(Gtk.Window):
                 GLib.idle_add(app["status_widget"].set_text, f"Installing {pkg_id} via Snap...")
                 GLib.idle_add(app["pbar_widget"].set_fraction, 0.5)
                 # Run snap install
-                res = subprocess.run(["sudo", "snap", "install", pkg_id], capture_output=True, text=True)
+                res = subprocess.run(["pkexec", "snap", "install", pkg_id], capture_output=True, text=True)
                 if res.returncode != 0:
                     raise Exception(f"Snap error: {res.stderr}")
                 GLib.idle_add(self.on_install_success, app)
@@ -386,7 +386,7 @@ class EtherealStore(Gtk.Window):
             if not dl_url:
                 # Last resort fallback URL construction
                 GLib.idle_add(app["status_widget"].set_text, "Using fallback URL...")
-                tag = data.get("tag_name", "latest") if 'data' in locals() else "latest"
+                tag = data.get("tag_name", "latest") if 'data' in locals() and data else "latest"
                 repo_name = repo.split("/")[-1]
                 dl_url = f"https://github.com/{repo}/releases/download/{tag}/{repo_name}-{tag}-x86_64.AppImage"
                 filename = f"{repo_name}.AppImage"

@@ -22,7 +22,9 @@ emerge --ask=n --quiet media-video/ffmpeg media-video/vlc media-libs/gst-plugins
 
 # 3. Configure Firefox for DRM and Hardware Acceleration
 echo "🦊 Optimizing Firefox for High-Quality Video..."
-USER_PREFS="/home/abdallah/.mozilla/firefox/ethereal.default-release/prefs.js"
+TARGET_USER="${SUDO_USER:-$(whoami)}"
+TARGET_HOME=$(getent passwd "$TARGET_USER" | cut -d: -f6)
+USER_PREFS="$TARGET_HOME/.mozilla/firefox/ethereal.default-release/prefs.js"
 
 if [ -f "$USER_PREFS" ]; then
     # Enable DRM (Netflix/Amazon Prime)
@@ -35,8 +37,8 @@ if [ -f "$USER_PREFS" ]; then
     echo 'user_pref("media.hardware-video-decoding.force-enabled", true);' >> "$USER_PREFS"
     echo 'user_pref("layers.acceleration.force-enabled", true);' >> "$USER_PREFS"
     
-    # Fix ownership just in case
-    chown abdallah:abdallah "$USER_PREFS"
+    # Fix ownership
+    chown "$TARGET_USER:$TARGET_USER" "$USER_PREFS"
 fi
 
 echo "✅ Multimedia Codecs successfully integrated."
