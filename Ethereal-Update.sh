@@ -58,10 +58,11 @@ pull_updates() {
 
 install_scripts() {
     echo "45"; echo "# 🔧 Installing System Scripts to /usr/local/bin..."
-    sudo cp "$REPO_DIR"/Ethereal-*.sh /usr/local/bin/ 2>/dev/null
-    sudo cp "$REPO_DIR"/*.py /usr/local/bin/ 2>/dev/null
-    sudo chmod +x /usr/local/bin/Ethereal-* 2>/dev/null
-    sudo chmod +x /usr/local/bin/*.py 2>/dev/null
+    # Use pkexec for graphical password prompt to avoid hanging in background
+    pkexec cp "$REPO_DIR"/Ethereal-*.sh /usr/local/bin/ 2>/dev/null
+    pkexec cp "$REPO_DIR"/*.py /usr/local/bin/ 2>/dev/null
+    pkexec chmod +x /usr/local/bin/Ethereal-* 2>/dev/null
+    pkexec chmod +x /usr/local/bin/*.py 2>/dev/null
 }
 
 clean_desktop() {

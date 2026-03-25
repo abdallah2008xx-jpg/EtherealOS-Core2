@@ -116,19 +116,39 @@ class EtherealUpdateManager(Gtk.Window):
         header.pack_start(subtitle, False, False, 0)
         self.main_box.pack_start(header, False, False, 0)
 
-        # Steps List
+        # Steps List (Left Side)
+        h_paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
+        h_paned.set_position(450)
+        self.main_box.pack_start(h_paned, True, True, 0)
+
         self.steps_listbox = Gtk.ListBox()
         self.steps_listbox.set_selection_mode(Gtk.SelectionMode.NONE)
-        self.steps_listbox.set_background_color = Gdk.RGBA(0,0,0,0)
         
-        scroll = Gtk.ScrolledWindow()
-        scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        scroll.add(self.steps_listbox)
-        self.main_box.pack_start(scroll, True, True, 10)
+        steps_scroll = Gtk.ScrolledWindow()
+        steps_scroll.add(self.steps_listbox)
+        h_paned.pack1(steps_scroll, True, False)
 
         for step in self.steps:
             row = self.create_step_row(step)
             self.steps_listbox.add(row)
+
+        # Log View (Right Side)
+        log_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        log_box.get_style_context().add_class("log-container")
+        
+        log_label = Gtk.Label(label="REAL-TIME DIAGNOSTICS", xalign=0)
+        log_label.set_margin_bottom(10)
+        log_box.pack_start(log_label, False, False, 0)
+
+        self.log_view = Gtk.TextView()
+        self.log_view.set_editable(False)
+        self.log_view.set_cursor_visible(False)
+        self.log_view.get_style_context().add_class("log-text")
+        
+        log_scroll = Gtk.ScrolledWindow()
+        log_scroll.add(self.log_view)
+        log_box.pack_start(log_scroll, True, True, 0)
+        h_paned.pack2(log_box, True, True)
 
         # Progress
         progress_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -141,10 +161,6 @@ class EtherealUpdateManager(Gtk.Window):
         self.main_box.pack_start(progress_box, False, False, 0)
 
         # Actions
-        actions = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        actions.set_center_widget(None)
-        actions.set_margin_bottom(30)
-        
         self.start_btn = Gtk.Button(label="START SYSTEM UPDATE")
         self.start_btn.get_style_context().add_class("start-btn")
         self.start_btn.connect("clicked", self.on_start_clicked)
@@ -179,33 +195,41 @@ class EtherealUpdateManager(Gtk.Window):
         thread = threading.Thread(target=self.run_update, daemon=True)
         thread.start()
 
+    def append_log(self, text):
+        buffer = self.log_view.get_buffer()
+        buffer.insert(buffer.get_end_iter(), text + "\n")
+        adj = self.log_view.get_parent().get_vadjustment()
+        adj.set_value(adj.get_upper() - adj.get_page_size())
+
     def run_update(self):
         total_steps = len(self.steps)
         for i, step in enumerate(self.steps):
             GLib.idle_add(self.update_step_ui, step, "Working", True)
+            GLib.idle_add(self.append_log, f"\n[STEP {step.id}] Starting: {step.name}")
             
-            # Execute the modular bash script step
             cmd = ["bash", "/usr/local/bin/Ethereal-Update.sh", step.arg]
-            # If not in /usr/local/bin yet (first run), use local
             if not os.path.exists("/usr/local/bin/Ethereal-Update.sh"):
                 cmd = ["bash", "Ethereal-Update.sh", step.arg]
                 
             try:
-                process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-                stdout, stderr = process.communicate()
+                process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+                for line in process.stdout:
+                    GLib.idle_add(self.append_log, line.strip())
+                
+                process.wait()
                 
                 if process.returncode == 0:
                     GLib.idle_add(self.update_step_ui, step, "Done", False)
                 else:
                     GLib.idle_add(self.update_step_ui, step, "Error", False)
-                    GLib.idle_add(self.show_error, f"Step '{step.name}' failed:\n{stderr}")
+                    GLib.idle_add(self.show_error, f"Step '{step.name}' failed. See log for details.")
                     return
             except Exception as e:
                 GLib.idle_add(self.show_error, str(e))
                 return
 
             GLib.idle_add(self.overall_progress.set_fraction, (i+1) / total_steps)
-            time.sleep(0.5)
+            time.sleep(0.3)
 
         GLib.idle_add(self.finish_update)
 
