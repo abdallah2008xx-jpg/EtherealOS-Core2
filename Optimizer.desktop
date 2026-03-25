@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=⚡️ System Optimizer
+Name= System Optimizer
 Comment=Clean cache and memory buffers
 Exec=/home/abdallah/.local/bin/Ethereal-Optimizer.sh
-Icon=system-settings
+Icon=/home/abdallah/.local/share/icons/ethereal/ethereal-optimizer.svg
 Terminal=false
 Categories=System;
