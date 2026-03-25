@@ -4,6 +4,6 @@ Type=Application
 Name= System Optimizer
 Comment=Clean cache and memory buffers
 Exec=/home/abdallah/.local/bin/Ethereal-Optimizer.sh
-Icon=/home/abdallah/.local/share/icons/ethereal/ethereal-optimizer.svg
+Icon=utilities-system-monitor
 Terminal=false
 Categories=System;

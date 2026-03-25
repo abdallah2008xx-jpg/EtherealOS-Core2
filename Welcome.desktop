@@ -4,6 +4,6 @@ Type=Application
 Name=👋 Welcome to Ethereal
 Comment=Your first-time setup and information
 Exec=/home/abdallah/.local/bin/Ethereal-Welcome.sh
-Icon=/home/abdallah/.local/share/icons/ethereal/ethereal-welcome.svg
+Icon=help-about
 Terminal=false
 Categories=System;

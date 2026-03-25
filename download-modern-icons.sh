@@ -15,8 +15,8 @@ cd /tmp/icon-download
 
 # Download Fluent Icon Theme (Windows 11 style)
 echo "⬇️ Downloading Fluent Icon Theme..."
-wget -q --show-progress "https://github.com/vinceliuice/Fluent-icon-theme/releases/download/2023-06-01/Fluent-icon-theme-2023-06-01.tar.xz" -O fluent.tar.xz 2>/dev/null || \
-curl -L -o fluent.tar.xz "https://github.com/vinceliuice/Fluent-icon-theme/releases/download/2023-06-01/Fluent-icon-theme-2023-06-01.tar.xz" 2>/dev/null || {
+wget -q --show-progress "https://github.com/vinceliuice/Fluent-icon-theme/releases/download/2024-01-01/Fluent-icon-theme-2024-01-01.tar.xz" -O fluent.tar.xz 2>/dev/null || \
+curl -L -o fluent.tar.xz "https://github.com/vinceliuice/Fluent-icon-theme/releases/download/2024-01-01/Fluent-icon-theme-2024-01-01.tar.xz" 2>/dev/null || {
     echo "⚠️ Direct download failed, trying alternative..."
 }
 
@@ -40,8 +40,8 @@ fi
 
 # Download WhiteSur Icon Theme (macOS style - very beautiful)
 echo "⬇️ Downloading WhiteSur Icon Theme..."
-wget -q --show-progress "https://github.com/vinceliuice/WhiteSur-icon-theme/releases/download/2023-06-01/WhiteSur-icon-theme-2023-06-01.tar.xz" -O whitesur.tar.xz 2>/dev/null || \
-curl -L -o whitesur.tar.xz "https://github.com/vinceliuice/WhiteSur-icon-theme/releases/download/2023-06-01/WhiteSur-icon-theme-2023-06-01.tar.xz" 2>/dev/null || {
+wget -q --show-progress "https://github.com/vinceliuice/WhiteSur-icon-theme/releases/download/2024-01-01/WhiteSur-icon-theme-2024-01-01.tar.xz" -O whitesur.tar.xz 2>/dev/null || \
+curl -L -o whitesur.tar.xz "https://github.com/vinceliuice/WhiteSur-icon-theme/releases/download/2024-01-01/WhiteSur-icon-theme-2024-01-01.tar.xz" 2>/dev/null || {
     echo "⚠️ WhiteSur download failed"
 }
 

@@ -2,7 +2,7 @@
 Name=🚀 Ethereal Game Boost
 Comment=EtherealOS Hyper-Threading Performance Engine
 Exec=/usr/bin/python3 /home/abdallah/ethereal-update/Ethereal-GameMode.py
-Icon=applications-games
+Icon=input-gaming
 Terminal=false
 Type=Application
 Categories=System;Utility;
