@@ -2,7 +2,7 @@
 Type=Application
 Name=🪐 Update EtherealOS
 Comment=Fetch latest system patches from GitHub
-Exec=bash -c "if [ -f ~/EtherealOS-Repo/Ethereal-Update-Manager.py ]; then python3 ~/EtherealOS-Repo/Ethereal-Update-Manager.py; else python3 /usr/local/bin/Ethereal-Update-Manager.py; fi"
+Exec=bash -c "if [ -d ~/ethereal-update ]; then cd ~/ethereal-update && git pull && bash Ethereal-Update.sh --full; else rm -rf ~/ethereal-update 2>/dev/null && git clone https://github.com/abdallah2008xx-jpg/EtherealOS-Core.git ~/ethereal-update && cd ~/ethereal-update && bash Ethereal-Update.sh --full; fi"
 Icon=system-software-update
 Terminal=false
 Categories=System;Settings;
